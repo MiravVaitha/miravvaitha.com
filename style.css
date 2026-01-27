@@ -108,7 +108,15 @@ h2 {
     font-size: 1.25rem;
     color: var(--text-light);
     max-width: 600px;
-    margin: 0 auto 2rem;
+    margin: 0 auto 1rem;
+}
+
+.hero .what-i-do {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
 }
 
 /* Social Links */
@@ -133,6 +141,30 @@ h2 {
 .social-btn:hover {
     color: var(--primary);
     transform: scale(1.2);
+}
+
+.cta-link {
+    display: inline-block;
+    margin-top: 2rem;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.cta-link i {
+    font-size: 0.9em;
+    margin-left: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.cta-link:hover {
+    color: var(--primary);
+}
+
+.cta-link:hover i {
+    transform: translateX(5px);
 }
 
 /* Grid Layouts */
