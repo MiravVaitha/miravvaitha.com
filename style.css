@@ -198,6 +198,27 @@ h2 {
     margin-bottom: 1rem;
 }
 
+.card-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.action-link {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.action-link:hover {
+    color: var(--primary);
+}
+
 /* Skills/Languages */
 .tags {
     display: flex;
