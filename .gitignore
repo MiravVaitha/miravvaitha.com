@@ -1,0 +1,15 @@
+# Vite / React
+vite-app/node_modules/
+vite-app/dist/
+vite-app/.vite/
+
+# General Node
+node_modules/
+dist/
+.vite/
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
