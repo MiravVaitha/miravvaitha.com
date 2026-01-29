@@ -42,7 +42,7 @@ export default function Experience() {
             description: "Designed, built, and programmed a remote-controlled vehicle as a personal engineering project. Integrated hardware and software components, focusing on system behaviour, control logic, and reliable operation.",
             actions: [
                 { label: "Read report", href: "/docs/tech-project-portfolio.pdf", icon: <FileText className="w-4 h-4" /> },
-                { label: "See media", href: "https://drive.google.com/drive/u/0/folders/16Mwq8ZMVIVF9qnfC1pUEB7J8RXV1SsP9", icon: <ExternalLink className="w-4 h-4" /> },
+                { label: "See media", href: "https://drive.google.com/drive/folders/16Mwq8ZMVIVF9qnfC1pUEB7J8RXV1SsP9?usp=sharing", icon: <ExternalLink className="w-4 h-4" /> },
             ],
         },
         {
