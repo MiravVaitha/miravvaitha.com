@@ -16,7 +16,7 @@ export default function Layout({ children, variant = "content" }: LayoutProps) {
     return (
         <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 md:p-8">
             {/* Background layer: Covers full viewport behind everything */}
-            <div className="fixed inset-0 -z-10 w-full h-full">
+            <div className="fixed inset-0 -z-10 w-full h-full pointer-events-none">
                 <NeuralBackground
                     color="#818cf8"
                     trailOpacity={0.1}
