@@ -41,7 +41,7 @@ export default function Experience() {
             subtitle: "Onshape, Hardware Integration, Javascript",
             description: "Designed, built, and programmed a remote-controlled vehicle as a personal engineering project. Integrated hardware and software components, focusing on system behaviour, control logic, and reliable operation.",
             actions: [
-                { label: "Read report", href: "/docs/tech-project-portfolio.pdf", icon: <FileText className="w-4 h-4" /> },
+                { label: "Read report", href: `${import.meta.env.BASE_URL}docs/tech-project-portfolio.pdf`, icon: <FileText className="w-4 h-4" /> },
                 { label: "See media", href: "https://drive.google.com/drive/folders/16Mwq8ZMVIVF9qnfC1pUEB7J8RXV1SsP9?usp=sharing", icon: <ExternalLink className="w-4 h-4" /> },
             ],
         },
@@ -50,7 +50,7 @@ export default function Experience() {
             subtitle: "Micro:bit, Embedded Systems, Onshape, Electronics",
             description: "Designed and built an autonomous line-following vehicle using a Micro:bit. Created custom components using CAD and digital fabrication, built and soldered the circuit, and programmed sensor-based motor control using light-dependent resistors. Iteratively tested and refined threshold values to improve accuracy and reliability on track bends.",
             actions: [
-                { label: "Read report", href: "/docs/line-follower-project.pdf", icon: <FileText className="w-4 h-4" /> },
+                { label: "Read report", href: `${import.meta.env.BASE_URL}docs/line-follower-project.pdf`, icon: <FileText className="w-4 h-4" /> },
             ],
         },
         {
