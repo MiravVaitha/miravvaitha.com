@@ -9,13 +9,23 @@ export default function Experience() {
             title: "AI Software Developer",
             company: "Metfolio",
             href: "https://www.metfolio.com/",
+            linkLabel: "metfolio.com",
             description: "Currently working as part of a development team on a production mobile application. My work spans frontend and backend development as well as automated testing, with a focus on building features that are reliable, maintainable, and suitable for real-world use.",
+        },
+        {
+            date: "Jan 2026 - Present",
+            title: "Junior Analyst",
+            company: "Trinity Student Management Fund",
+            href: "https://www.linkedin.com/company/trinity-smf/about/",
+            linkLabel: "LinkedIn",
+            description: "Responsible for analysing companies within the hardware sector, conducting fundamental research to evaluate financial performance and identify key valuation drivers. I actively contribute to investment discussions, developing data-driven theses to support the fund's pitch decisions and capital allocation strategies.",
         },
         {
             date: "Feb - Aug 2023, Jul - Sept 2025",
             title: "Software Engineering Intern",
             company: "Capventis",
             href: "https://www.capventis.com/glu",
+            linkLabel: "capventis.com",
             description: "Contributed to the development and testing of an in-house business software platform across two internship periods. Worked on feature development, wrote UI automation tests using JavaScript, supported end-to-end testing, and analysed large client datasets to assist with reporting and client-facing deliverables.",
         },
         {
@@ -23,11 +33,21 @@ export default function Experience() {
             title: "Retail Assistant",
             company: "Purejewels",
             href: "https://www.purejewels.com/",
+            linkLabel: "purejewels.com",
             description: "Worked in a high-value retail environment, providing customer service and supporting daily operations. Developed strong communication skills, attention to detail, and experience working responsibly in a customer-facing role.",
         },
     ]
 
     const projects = [
+        {
+            title: "ClarityCast",
+            subtitle: "Next.js, TypeScript, Tailwind CSS, shadcn/ui, Gemini API, Vercel, Git & GitHub",
+            description: "An AI powered web platform that turns messy thoughts into structured clarity and adapts that clarity into audience-ready communication. Currently has an open demo.",
+            actions: [
+                { label: "Demo", href: "https://claritycast.vercel.app/login", icon: <ExternalLink className="w-4 h-4" /> },
+                { label: "Source code", href: "https://github.com/MiravVaitha/claritycast.ai", icon: <Github className="w-4 h-4" /> },
+            ],
+        },
         {
             title: "Kroccustoms",
             subtitle: "Shopify, Web Design, E-commerce",
@@ -88,9 +108,21 @@ export default function Experience() {
                                     {exp.date}
                                 </span>
                             </div>
-                            <p className="text-white/70 text-sm md:text-base leading-relaxed">
+                            <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
                                 {exp.description}
                             </p>
+                            <div className="pt-4 border-t border-white/10">
+                                <a
+                                    href={exp.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="flex items-center gap-2 text-xs font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest w-fit"
+                                >
+                                    <ExternalLink className="w-4 h-4" />
+                                    <span>{exp.linkLabel}</span>
+                                </a>
+                            </div>
                         </GlassCard>
                     ))}
                 </div>

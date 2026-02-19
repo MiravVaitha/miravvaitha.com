@@ -1,4 +1,4 @@
-import { GraduationCap, Award, Languages, Code2 } from "lucide-react"
+import { GraduationCap, Award, Languages, Code2, ExternalLink } from "lucide-react"
 import GlassCard from "@/components/ui/glass-card"
 
 export default function Education() {
@@ -8,6 +8,7 @@ export default function Education() {
             degree: "Bachelor of Engineering",
             institution: "Trinity College Dublin",
             href: "https://www.tcd.ie/engineering/",
+            linkLabel: "tcd.ie",
             description: "Pursuing engineering at one of Ireland’s top universities, building a strong foundation in core engineering principles.",
         },
         {
@@ -15,6 +16,7 @@ export default function Education() {
             degree: "Junior cert, Leaving cert",
             institution: "The Kings Hospital Secondary School, Dublin",
             href: "https://kingshospital.ie/",
+            linkLabel: "kingshospital.ie",
             description: "Achieved an exceptional result of 578 points in the leaving cert.",
         },
     ]
@@ -23,12 +25,12 @@ export default function Education() {
         {
             title: "Academic Awards",
             date: "2020 - 2025",
-            description: "Received the Wilson Suffern form prize for outstanding exam results for 5 consecutive years.",
+            description: "Received excellence awards for outstanding exam results for 5 consecutive years.",
         },
         {
             title: "578 points in LC",
             date: "2025",
-            description: "Achieved 578/625 points in the Leaving cert with H1s in Mathematics, Technology and Business.",
+            description: "Achieved results placing me in the top 7% of students nationally in the 2025 Leaving Certificate.",
         },
     ]
 
@@ -72,9 +74,21 @@ export default function Education() {
                                     {edu.date}
                                 </span>
                             </div>
-                            <p className="text-white/70 text-sm md:text-base leading-relaxed">
+                            <p className="text-white/70 text-sm md:text-base leading-relaxed mb-4">
                                 {edu.description}
                             </p>
+                            <div className="pt-4 border-t border-white/10">
+                                <a
+                                    href={edu.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="flex items-center gap-2 text-xs font-bold text-white/50 hover:text-white transition-colors uppercase tracking-widest w-fit"
+                                >
+                                    <ExternalLink className="w-4 h-4" />
+                                    <span>{edu.linkLabel}</span>
+                                </a>
+                            </div>
                         </GlassCard>
                     ))}
                 </div>
