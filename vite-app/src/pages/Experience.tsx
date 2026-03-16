@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { ExternalLink, FileText, Github, Instagram, ArrowRight } from "lucide-react"
+import { ExternalLink, FileText, Github, Instagram, ArrowRight, Newspaper } from "lucide-react"
 import GlassCard from "@/components/ui/glass-card"
 
 export default function Experience() {
@@ -53,6 +53,7 @@ export default function Experience() {
             subtitle: "Shopify, Web Design, E-commerce",
             description: "Co-founded and operated a custom clothing brand, taking responsibility for building and maintaining the Shopify e-commerce website. Worked across branding, marketing, sales, and basic financial management, gaining hands-on experience with running a small online business end-to-end.",
             actions: [
+                { label: "Blog post", href: "https://kingshospital.ie/kh-entrepreneurs-in-the-making/", icon: <Newspaper className="w-4 h-4" /> },
                 { label: "Instagram", href: "https://www.instagram.com/kroccustoms/", icon: <Instagram className="w-4 h-4" /> },
             ],
         },

@@ -35,7 +35,7 @@ export default function Education() {
     ]
 
     const technicalSkills = [
-        "React", "TypeScript", "Vite", "Tailwind CSS", "JavaScript", "Git", "GitHub", "HTML", "CSS"
+        "Coded UI Testing", "Github", "AI Engineering", "Web Development", "Software Design", "Mobile App Development"
     ]
 
     const engineeringSkills = [
