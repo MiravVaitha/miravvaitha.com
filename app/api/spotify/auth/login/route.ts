@@ -28,11 +28,9 @@ export async function GET(req: Request) {
   let redirectUri = `${url.origin}/api/spotify/auth/callback`;
   // Force loopback IP in dev. Browsers often autocomplete 127.0.0.1 back
   // to "localhost" in the address bar, which would mismatch Spotify's
-  // exact-string redirect URI check.
-  if (
-    process.env.NODE_ENV !== "production" &&
-    url.hostname === "localhost"
-  ) {
+  // exact-string redirect URI check. The early NODE_ENV === "production"
+  // return above means we're in dev here.
+  if (url.hostname === "localhost") {
     redirectUri = redirectUri.replace("://localhost", "://127.0.0.1");
   }
 

@@ -31,12 +31,10 @@ export async function GET(req: Request) {
     );
   }
 
-  // Must match exactly what the login route sent to /authorize.
+  // Must match exactly what the login route sent to /authorize. The
+  // early NODE_ENV === "production" return above means we're in dev here.
   let redirectUri = `${url.origin}/api/spotify/auth/callback`;
-  if (
-    process.env.NODE_ENV !== "production" &&
-    url.hostname === "localhost"
-  ) {
+  if (url.hostname === "localhost") {
     redirectUri = redirectUri.replace("://localhost", "://127.0.0.1");
   }
   const basic = btoa(`${clientId}:${clientSecret}`);
