@@ -3,6 +3,7 @@ export type Experience = {
   role: string;
   start: string;
   end: string | null;
+  url?: string;
   note?: string;
 };
 
@@ -12,19 +13,22 @@ export const experience: Experience[] = [
     role: "Software Engineering Intern",
     start: "2026-06",
     end: "present",
-    note: "Return placement.",
+    url: "https://www.capventis.com/",
+    note: "Return placement",
   },
   {
     org: "Capventis",
     role: "Software Engineering Intern",
     start: "2025-07",
     end: "2025-09",
+    url: "https://www.capventis.com/",
   },
   {
     org: "Trinity College Dublin",
     role: "BAI Engineering",
     start: "2025",
     end: "2029",
+    url: "https://www.tcd.ie/engineering/",
   },
   {
     org: "Freelance",
@@ -37,5 +41,6 @@ export const experience: Experience[] = [
     role: "Co-founder",
     start: "TBD",
     end: null,
+    url: "https://www.instagram.com/kroccustoms/",
   },
 ];
