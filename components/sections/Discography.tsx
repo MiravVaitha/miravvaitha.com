@@ -1,85 +1,100 @@
+"use client";
+
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { experience, type Experience } from "@/content/experience";
-
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-function formatDate(date: string | null): string {
-  if (date === null) return "—";
-  if (date === "present" || date === "TBD") return date;
-  // YYYY-MM -> "Mon YYYY"
-  const match = date.match(/^(\d{4})-(\d{2})$/);
-  if (match) {
-    const [, year, month] = match;
-    return `${MONTHS[parseInt(month, 10) - 1]} ${year}`;
-  }
-  // YYYY or other passes through
-  return date;
-}
-
-function formatRange(item: Experience): string {
-  if (item.start === "TBD" && item.end === null) return "TBD";
-  return `${formatDate(item.start)} — ${formatDate(item.end)}`;
-}
+import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export function Discography() {
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    function onScroll() {
+      const el = listRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const total = rect.height + vh * 0.5;
+      const seen = vh - rect.top;
+      const p = Math.max(0, Math.min(1, seen / total));
+      setProgress(p);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const railStyle = {
+    "--rail-progress": progress,
+  } as CSSProperties;
+
   return (
-    <section className="px-6 py-16 sm:px-12 sm:py-24 lg:px-20">
-      <div className="mx-auto max-w-5xl">
-        <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Discography
-        </h2>
-        <div className="mt-10 divide-y divide-neutral-800 border-y border-neutral-800">
-          {experience.map((item, i) => (
-            <div
-              key={`${item.org}-${item.start}-${i}`}
-              className="group grid grid-cols-[2rem_1fr_auto] items-baseline gap-4 py-4 transition-colors hover:bg-neutral-900/40 sm:gap-8"
-            >
-              <span className="font-mono text-xs text-muted-foreground">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0">
-                <div className="truncate text-base font-medium text-foreground sm:text-lg">
-                  {item.role}
-                </div>
-                <div className="truncate text-sm text-muted-foreground">
-                  {item.url ? (
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-foreground hover:underline hover:decoration-spotify-green hover:underline-offset-2"
-                    >
-                      {item.org}
-                    </a>
-                  ) : (
-                    item.org
-                  )}
-                  {item.note && (
-                    <span className="ml-2 italic text-neutral-500">
-                      · {item.note}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <span className="whitespace-nowrap font-mono text-xs text-muted-foreground">
-                {formatRange(item)}
-              </span>
-            </div>
-          ))}
+    <section className="section disco" data-screen-label="03 Discography">
+      <SectionHeader
+        number="03"
+        title="Discography"
+        sub="Roles & places, in chronological reverse"
+      />
+      <div className="disco-timeline" ref={listRef} style={railStyle}>
+        <div className="disco-rail" aria-hidden>
+          <div className="disco-rail-fill" />
         </div>
+        <ol className="disco-list">
+          {experience.map((e, i) => (
+            <DiscoEntry key={`${e.org}-${e.start}-${i}`} entry={e} index={i} />
+          ))}
+        </ol>
       </div>
     </section>
+  );
+}
+
+function DiscoEntry({ entry, index }: { entry: Experience; index: number }) {
+  const isCurrent = entry.end === "present";
+  return (
+    <li className="disco-item">
+      <div className="disco-marker" aria-hidden>
+        <span className="disco-dot" />
+        {isCurrent && <span className="disco-pulse" />}
+      </div>
+      <div className="disco-card">
+        <div className="disco-track-meta">
+          <span className="disco-num mono">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          {isCurrent && (
+            <span className="disco-now-tag mono">
+              <span className="disco-now-dot" /> Currently playing
+            </span>
+          )}
+        </div>
+        <h3 className="disco-role">
+          {entry.role} <span className="disco-at">@</span>{" "}
+          {entry.url ? (
+            <a
+              href={entry.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="disco-org-link"
+            >
+              {entry.org}
+            </a>
+          ) : (
+            <span className="disco-org-link">{entry.org}</span>
+          )}
+        </h3>
+        <div className="disco-meta-line">
+          <span className="mono">
+            {entry.start} → {entry.end ?? "—"}
+          </span>
+          {entry.note && <span className="disco-note">· {entry.note}</span>}
+        </div>
+        {entry.summary && <p className="disco-summary">{entry.summary}</p>}
+      </div>
+    </li>
   );
 }

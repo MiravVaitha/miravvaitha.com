@@ -4,16 +4,27 @@ import { Discography } from "@/components/sections/Discography";
 import { TopTracks } from "@/components/sections/TopTracks";
 import { Follow } from "@/components/sections/Follow";
 import { Footer } from "@/components/ui/Footer";
+import { Marquee } from "@/components/ui/Marquee";
+
+const MARQUEE_ITEMS = [
+  "Now Playing · Mirav Vaitha",
+  "Side A · Track 01",
+  "Dublin, IE",
+  "Currently shipping",
+  "ClarityCast · Capventis · Trinity",
+  "Available for freelance",
+];
 
 export default function Home() {
   return (
-    <main>
+    <div className="shell">
       <Hero />
+      <Marquee items={MARQUEE_ITEMS} />
       <LinerNotes />
       <Discography />
       <TopTracks />
       <Follow />
       <Footer />
-    </main>
+    </div>
   );
 }

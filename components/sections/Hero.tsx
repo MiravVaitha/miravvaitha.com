@@ -2,22 +2,20 @@ import { NowPlaying } from "@/components/ui/NowPlaying";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen px-6 py-16 sm:px-12 sm:py-24 lg:px-20">
-      <div className="mb-12 sm:mb-0 sm:absolute sm:right-6 sm:top-6 lg:right-20 lg:top-12">
-        <NowPlaying />
+    <section className="hero hero-centered" data-screen-label="01 Hero">
+      <div className="hero-eyebrow">
+        <span className="dot" /> <span>SIDE A · TRACK 01</span>
       </div>
-
-      <div className="max-w-4xl space-y-8 sm:pr-80">
-        <h1 className="text-6xl font-bold tracking-tight text-foreground sm:text-7xl lg:text-8xl xl:text-9xl">
-          Mirav Vaitha
-        </h1>
-        <p className="text-xl italic text-muted-foreground">
-          TBD &mdash; hero copy
-        </p>
-        <p className="font-mono text-sm text-muted-foreground">
-          Engineering @ Trinity College Dublin · SWE Intern @ Capventis · Based
-          in Dublin
-        </p>
+      <h1 className="hero-name hero-name-center">Mirav Vaitha</h1>
+      <p className="hero-tag">
+        <em>Engineer, builder, occasional shipper of small things.</em>
+      </p>
+      <p className="hero-credits">
+        Engineering @ Trinity College Dublin &nbsp;·&nbsp; SWE Intern @
+        Capventis &nbsp;·&nbsp; Based in Dublin
+      </p>
+      <div className="hero-np-center">
+        <NowPlaying compact />
       </div>
     </section>
   );

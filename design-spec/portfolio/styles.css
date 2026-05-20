@@ -1,29 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* ═══════════════════════════════════════════════════════════════════════════
-   miravvaitha.com — portfolio styles
-   Ported from design-spec/portfolio/styles.css.
-   Chosen defaults: Stage palette · light · editorial · dense · medium · centered.
+   B-side — portfolio prototype styles
+   Variables driven by theme.jsx. Mobile-first, then layered up.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Stage / light */
-  --accent: oklch(0.55 0.15 145);
-  --bg: oklch(0.98 0.010 150);
-  --fg: oklch(0.18 0.008 150);
-  --mute: oklch(0.46 0.014 150);
-  --surface: oklch(0.93 0.014 150);
-
-  /* Fonts wired to next/font variables from app/layout.tsx */
-  --font-display: var(--font-instrument-serif), "Times New Roman", Georgia, serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
-
-  /* Density: dense */
-  --section-pad: 48px;
-  --gap: 14px;
+  --accent: oklch(0.74 0.14 48);
+  --bg: oklch(0.14 0.006 60);
+  --fg: oklch(0.97 0.006 60);
+  --mute: oklch(0.55 0.012 60);
+  --surface: oklch(0.20 0.008 60);
+  --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --section-pad: 80px;
+  --gap: 20px;
   --maxw: 1240px;
   --radius: 14px;
 }
@@ -31,6 +21,9 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 html {
+  /* Transparent so the .bg-shader behind body can show. A black fallback
+     is painted via the body bg so flash-of-white doesn't occur before the
+     shader bundle loads. */
   background: transparent;
   color: var(--fg);
   font-family: var(--font-body);
@@ -54,6 +47,7 @@ body {
   position: fixed; inset: 0;
   z-index: 1;
   pointer-events: none;
+  /* Very light tint — shader stays fully visible. */
   background: color-mix(in oklab, var(--bg) 18%, transparent);
 }
 :root[data-mode="light"] .bg-shader-overlay {
@@ -76,9 +70,12 @@ body {
   text-shadow: 0 1px 10px color-mix(in oklab, var(--bg) 90%, transparent);
 }
 
-/* Promote previously-muted text to high contrast so it's readable over
-   the colorful shader. Hierarchy preserved via opacity below. */
-:root { --mute: var(--fg); }
+/* Promote previously-muted (grey) text to high contrast so it's
+   readable over the colorful shader. In dark mode this becomes
+   off-white; in light mode it becomes near-black. */
+:root {
+  --mute: var(--fg);
+}
 .hero-credits,
 .hero-eyebrow,
 .sh-num,
@@ -110,6 +107,8 @@ body {
 .mp-time {
   color: var(--fg);
 }
+/* Muted/secondary text gets slightly reduced opacity so there's still a
+   hierarchy difference vs. primary copy — but stays readable. */
 .sh-sub, .disco-org, .disco-note, .disco-dates,
 .track-dur, .track-blurb, .track-tech,
 .tl-blurb, .tl-tech, .tl-dur, .tm-blurb,
@@ -119,9 +118,12 @@ body {
   opacity: 0.92;
 }
 
+/* When the shader is mounted, JS adds .has-shader to <html> — that lets
+   us drop the body bg so the shader is actually visible. */
 html.has-shader body { background: transparent; }
 
-.shell, .top-scrubber, .mini-player, .cursor-dot, .cursor-ring {
+/* All content has to render above both shader layers. */
+.shell, .twk-panel, .top-scrubber, .mini-player, .cursor-dot, .cursor-ring {
   position: relative;
   z-index: 5;
 }
@@ -142,16 +144,21 @@ a:hover { color: var(--accent); }
   text-transform: uppercase;
 }
 
+/* Hide native cursor on fine-pointer devices. Apply to ALL elements so
+   it doesn't reappear on inputs, links, etc. */
 @media (pointer: fine) {
   html, html * { cursor: none !important; }
 }
 
+/* Hide native scrollbars — custom side scrollbar takes over. */
 html { scrollbar-width: none; -ms-overflow-style: none; }
 html::-webkit-scrollbar { display: none; }
 body { scrollbar-width: none; }
 body::-webkit-scrollbar { display: none; }
 
 /* ── Scroll reveal ─────────────────────────────────────────────────────── */
+/* Sections start hidden + slightly translated, fade in when their
+   IntersectionObserver fires .in-view. */
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -163,8 +170,12 @@ body::-webkit-scrollbar { display: none; }
   opacity: 1;
   transform: translateY(0);
 }
+/* Hero is always visible — don't hide above-the-fold content even if its
+   observer hasn't fired yet. */
 .hero.reveal { opacity: 1; transform: none; transition: none; }
 
+/* Staggered children inside lists/grids. Each child gets a CSS variable
+   --reveal-delay set by ScrollReveals; the transition delay reads that. */
 .reveal-child {
   opacity: 0;
   transform: translateY(20px);
@@ -176,6 +187,7 @@ body::-webkit-scrollbar { display: none; }
   transform: translateY(0);
 }
 
+/* Reduced-motion: respect user preference. */
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal-child {
     opacity: 1 !important;
@@ -183,8 +195,6 @@ body::-webkit-scrollbar { display: none; }
     transition: none !important;
   }
 }
-
-/* ── Side scrollbar ────────────────────────────────────────────────────── */
 .side-scroll {
   position: fixed; top: 16px; bottom: 16px; right: 8px;
   z-index: 60;
@@ -195,11 +205,14 @@ body::-webkit-scrollbar { display: none; }
   position: relative;
   width: 100%; height: 100%;
   pointer-events: auto;
+  /* hit target — thin visible track inside */
   display: flex; justify-content: center;
   -webkit-user-select: none;
   user-select: none;
   touch-action: none;
 }
+/* When dragging the thumb, lock text selection globally so the page
+   doesn't highlight as the pointer moves. */
 html.ss-dragging,
 html.ss-dragging * {
   -webkit-user-select: none !important;
@@ -229,6 +242,7 @@ html.ss-dragging * {
   margin-left: -3px;
 }
 @media (pointer: coarse) {
+  /* On touch devices, restore the native scrollbar since custom cursor is off. */
   .side-scroll { display: none; }
   html, body { scrollbar-width: auto; -ms-overflow-style: auto; }
   html::-webkit-scrollbar, body::-webkit-scrollbar { display: initial; }
@@ -487,11 +501,6 @@ html.ss-dragging * {
   background: var(--accent);
   box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 30%, transparent);
 }
-.np-art-img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .np-eq {
@@ -504,7 +513,6 @@ html.ss-dragging * {
   width: 2px; background: var(--accent); border-radius: 1px;
   animation: eq 1.1s ease-in-out infinite;
 }
-.np-eq.np-eq-paused span { animation-play-state: paused; opacity: 0.4; }
 .np-eq span:nth-child(1) { animation-delay: 0s; height: 6px; }
 .np-eq span:nth-child(2) { animation-delay: 0.2s; height: 10px; }
 .np-eq span:nth-child(3) { animation-delay: 0.4s; height: 4px; }
@@ -536,8 +544,6 @@ html.ss-dragging * {
   font-weight: 600; font-size: 14px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.np-track a { color: inherit; }
-.np-track a:hover { color: var(--accent); }
 .np-artist {
   font-size: 12px; color: var(--mute);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -633,6 +639,8 @@ html.ss-dragging * {
   padding-left: 0;
 }
 
+/* Rail — runs the full height of the list. The fill scales 0→1 with
+   scroll progress, like a track playhead moving down the timeline. */
 .disco-rail {
   position: absolute;
   top: 14px;
@@ -675,6 +683,8 @@ html.ss-dragging * {
   align-items: flex-start;
 }
 
+/* Marker — accent dot sitting on the rail. Current-role entries get a
+   pulsing ring around it. */
 .disco-marker {
   position: relative;
   width: 26px; height: 26px;
@@ -706,6 +716,8 @@ html.ss-dragging * {
   100% { transform: scale(2.2); opacity: 0; }
 }
 
+/* Card — each entry's content block. Subtle hover surface so it reads
+   as a tappable item without being a full card chip. */
 .disco-card {
   padding: 14px 0 6px;
   border-radius: 12px;
@@ -905,6 +917,141 @@ html.ss-dragging * {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--mute);
+}
+
+/* ── Top Tracks: List variant ──────────────────────────────────────────── */
+.tracks-listing {
+  max-width: var(--maxw); margin: 0 auto;
+  list-style: none; padding: 0;
+}
+.tl-row {
+  display: grid;
+  grid-template-columns: 32px 56px 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 8px;
+  border-bottom: 1px solid color-mix(in oklab, var(--fg) 8%, transparent);
+  transition: background 0.2s, padding 0.2s;
+}
+.tl-row:hover {
+  background: color-mix(in oklab, var(--accent) 6%, transparent);
+  padding-left: 16px;
+}
+.tl-num { color: var(--mute); }
+.tl-thumb {
+  width: 56px; height: 56px;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 30% 25%,
+      oklch(0.72 0.18 var(--h)) 0%,
+      oklch(0.32 0.10 var(--h)) 100%);
+  display: grid; place-items: center;
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
+  font-size: 18px;
+}
+.tl-title { font-weight: 500; font-size: 15px; }
+.tl-blurb { color: var(--mute); font-size: 12.5px; margin-top: 2px; }
+.tl-tech { color: var(--mute); max-width: 280px; text-align: right; }
+.tl-dur { color: var(--mute); white-space: nowrap; }
+@media (max-width: 800px) {
+  .tl-tech { display: none; }
+}
+@media (max-width: 540px) {
+  .tl-row { grid-template-columns: 24px 44px 1fr auto; }
+  .tl-thumb { width: 44px; height: 44px; }
+}
+
+/* ── Top Tracks: Mosaic variant ────────────────────────────────────────── */
+.tracks-mosaic {
+  max-width: var(--maxw); margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 90px;
+  gap: 12px;
+}
+.tm-tile {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 25%,
+      oklch(0.72 0.18 var(--h)) 0%,
+      oklch(0.32 0.10 var(--h)) 100%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 16px;
+  color: white;
+  transition: transform 0.3s;
+}
+.tm-tile:hover { transform: translateY(-3px); }
+.tm-cover { position: absolute; inset: 0; }
+.tm-num {
+  position: absolute; top: 12px; left: 14px;
+  font-size: 10px; color: rgba(255,255,255,0.7);
+}
+.tm-info { position: relative; z-index: 1; }
+.tm-title {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(15px, 1.4vw, 19px);
+  line-height: 1.15;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+}
+.tm-blurb {
+  font-size: 12px;
+  color: rgba(255,255,255,0.85);
+  margin-top: 4px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.tm-0 { grid-column: span 3; grid-row: span 3; }
+.tm-1 { grid-column: span 3; grid-row: span 2; }
+.tm-2 { grid-column: span 2; grid-row: span 2; }
+.tm-3 { grid-column: span 2; grid-row: span 2; }
+.tm-4 { grid-column: span 2; grid-row: span 2; }
+.tm-5 { grid-column: span 3; grid-row: span 2; }
+@media (max-width: 820px) {
+  .tracks-mosaic { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 80px; }
+  .tm-0 { grid-column: span 4; grid-row: span 3; }
+  .tm-1 { grid-column: span 2; grid-row: span 2; }
+  .tm-2 { grid-column: span 2; grid-row: span 2; }
+  .tm-3 { grid-column: span 2; grid-row: span 2; }
+  .tm-4 { grid-column: span 2; grid-row: span 2; }
+  .tm-5 { grid-column: span 4; grid-row: span 2; }
+}
+@media (max-width: 520px) {
+  .tracks-mosaic { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .tm-tile { aspect-ratio: 16/10; grid-column: span 1 !important; grid-row: span 1 !important; }
+}
+
+/* ── B-sides ───────────────────────────────────────────────────────────── */
+.bsides-grid {
+  max-width: var(--maxw); margin: 0 auto;
+  columns: 2;
+  column-gap: var(--gap);
+}
+@media (min-width: 720px) { .bsides-grid { columns: 3; } }
+@media (min-width: 1100px) { .bsides-grid { columns: 4; } }
+
+.bs-tile {
+  break-inside: avoid;
+  margin: 0 0 var(--gap);
+  display: block;
+}
+.bs-tile-inner {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background:
+    linear-gradient(135deg,
+      oklch(0.40 0.06 var(--h)),
+      oklch(0.22 0.04 var(--h)));
+  width: 100%; height: 100%;
+  min-height: 160px;
+}
+.bs-tile { aspect-ratio: inherit; }
+.bs-tile figcaption {
+  margin-top: 8px;
+  color: var(--mute);
+  font-size: 10px;
 }
 
 /* ── Follow ────────────────────────────────────────────────────────────── */
@@ -1189,16 +1336,106 @@ html.ss-dragging * {
 }
 .proj-pager-meta { font-size: 10.5px; opacity: 0.7; letter-spacing: 0.1em; }
 
+/* List & mosaic variants needed the inner element to be the <a> so the
+   whole row is clickable. Make sure it grid-aligns the same. */
+.tl-link {
+  display: grid;
+  grid-template-columns: 32px 56px 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+@media (max-width: 540px) {
+  .tl-link { grid-template-columns: 24px 44px 1fr auto; }
+}
+.mini-player {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 16px;
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+  border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+  border-radius: 999px;
+  backdrop-filter: blur(16px);
+  width: min(640px, calc(100vw - 32px));
+  box-shadow: 0 14px 60px rgba(0,0,0,0.4);
+}
+.mp-art {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%,
+      oklch(0.72 0.18 var(--h, 40)) 0%,
+      oklch(0.28 0.08 var(--h, 40)) 100%);
+  animation: spin 14s linear infinite;
+}
+.mp-meta { min-width: 0; }
+.mp-track { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mp-artist { font-size: 11px; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mp-controls { display: flex; gap: 4px; }
+.mp-controls button {
+  background: none; border: none; color: var(--fg);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 12px;
+}
+.mp-controls button:hover { background: color-mix(in oklab, var(--fg) 12%, transparent); }
+.mp-play {
+  background: var(--accent) !important;
+  color: var(--bg) !important;
+  width: 34px !important; height: 34px !important;
+}
+.mp-progress { display: none; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; color: var(--mute); }
+@media (min-width: 700px) {
+  .mini-player { grid-template-columns: 48px 1fr auto 200px; }
+  .mp-progress { display: flex; }
+  .mp-bar { flex: 1; height: 3px; background: color-mix(in oklab, var(--fg) 14%, transparent); border-radius: 2px; overflow: hidden; }
+  .mp-fill { height: 100%; background: var(--accent); }
+}
+
+/* metaphor variations */
+:root[data-metaphor="minimal"] .mini-player,
+:root[data-metaphor="minimal"] .cover-glyph,
+:root[data-metaphor="minimal"] .cover-eq,
+:root[data-metaphor="minimal"] .cover-play,
+:root[data-metaphor="minimal"] .disco-play,
+:root[data-metaphor="minimal"] .track-dur,
+:root[data-metaphor="minimal"] .np-eq { display: none; }
+:root[data-metaphor="minimal"] .marquee { display: none; }
+
+:root[data-metaphor="medium"] .mini-player { display: none; }
+
+:root[data-metaphor="full"] .shell { padding-bottom: 100px; }
+
+/* Tweaks-aware reduce on small screens for the mini-player */
+@media (max-width: 540px) {
+  .mini-player { display: none; }
+}
+
 /* ═════════════════════════════════════════════════════════════════════
-   MOBILE (≤640px)
+   MOBILE OPTIMIZATIONS (≤640px / touch)
+   ═════════════════════════════════════════════════════════════════════
+   Everything below tightens the layout for phone-sized screens:
+   - smaller display type, less padding, tighter gaps
+   - fluid widths (no fixed 320px components)
+   - 44px-min tap targets
+   - simplified chrome (top scrubber thumb, no marquee gap shift)
    ═════════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 640px) {
+  /* Section rhythm — even "spacious" density gets a saner cap on phones */
   :root { --section-pad: min(var(--section-pad), 56px); }
 
+  /* Top scrubber — slightly thinner on phones */
   .top-scrubber { padding: 10px 14px 0; }
   .ts-thumb { width: 8px; height: 8px; margin-left: -4px; }
 
+  /* Hero — tighter top padding, smaller display, body-first layout */
   .hero { min-height: 0; padding-top: 80px; padding-bottom: 56px; }
   .hero-name { font-size: clamp(48px, 18vw, 88px); margin: 18px 0 16px; }
   .hero-tag { font-size: 18px; margin-bottom: 18px; }
@@ -1206,21 +1443,26 @@ html.ss-dragging * {
   .hero-eyebrow { font-size: 10px; }
   .hero-np-center { margin-top: 24px; }
 
+  /* Now Playing — fluid width, no fixed pixel width */
   .np, .np-compact { width: 100%; max-width: 360px; }
 
+  /* Section headers — sub line was already hidden ≤640; tighten title */
   .sh-title { font-size: clamp(24px, 7.5vw, 36px); }
   .section-header {
     padding-bottom: 22px;
     margin-bottom: 22px;
   }
 
+  /* Marquee — smaller text, no horizontal padding bleed */
   .marquee { padding: 10px 0; }
   .marquee-item { font-size: 10.5px; gap: 18px; padding-right: 18px; }
 
+  /* Liner Notes — photo full-width then copy */
   .liner-grid { gap: 24px; }
   .liner-photo-frame { aspect-ratio: 4/5; max-width: 320px; margin: 0 auto; }
   .liner-copy p { font-size: 16px; line-height: 1.55; margin-bottom: 16px; }
 
+  /* Discography — see existing 640 rule; bump tap target & font sizes */
   .disco-list { gap: 36px; }
   .disco-item { grid-template-columns: 32px 1fr; gap: 14px; }
   .disco-rail { left: 8px; }
@@ -1234,18 +1476,28 @@ html.ss-dragging * {
   .disco-track-meta { gap: 8px; margin-bottom: 4px; }
   .disco-num { font-size: 10px; }
   .disco-now-tag { padding: 2px 8px; font-size: 9px; }
+  .disco-play { display: none; }
 
+  /* Top Tracks: grid — one column already at <640. Tighten meta. */
   .tracks-grid { gap: 16px; }
   .track-card { padding: 0 0 8px; }
   .track-meta { padding: 12px 4px 0; }
   .cover-title { font-size: 17px; }
 
+  /* Follow — bigger tap targets */
   .follow-list a { padding: 18px 4px; min-height: 60px; }
   .follow-label { font-size: clamp(22px, 6vw, 30px); }
   .follow-handle { font-size: 12px; }
 
+  /* Footer wraps to two lines */
   .footer-inner { gap: 6px; }
 
+  /* Tweaks panel — let it shrink on phones so it doesn't dominate */
+  .twk-panel { right: 8px; bottom: 8px; width: calc(100vw - 16px); max-width: 280px; }
+
+  /* Custom cursor — already hidden via pointer:coarse */
+
+  /* Project detail page */
   .proj-nav { padding-top: 24px; }
   .proj-back { font-size: 11px; }
   .proj { padding: 32px 20px 56px; }
@@ -1272,6 +1524,7 @@ html.ss-dragging * {
   .proj-pager-title { font-size: 22px; }
 }
 
+/* Very small phones — iPhone SE, older Androids (≤380px) */
 @media (max-width: 380px) {
   .hero-name { font-size: clamp(44px, 16vw, 72px); line-height: 0.92; }
   .sh-title { font-size: 22px; }
@@ -1280,17 +1533,26 @@ html.ss-dragging * {
   .marquee-item { font-size: 9.5px; }
 }
 
+/* Touch devices — even on wider screens, give everything 44px tap targets
+   and disable hover-only visual states that don't make sense without
+   a cursor. */
 @media (pointer: coarse) {
+  /* Hover-revealed preview overlays don't trigger without a cursor — show
+     a subtle hint on tap by leaving the static glyph + title visible
+     (already the default) and skipping the hover transform. */
   .track-card:hover { transform: none; }
   .track-card:active { transform: scale(0.985); }
-  .follow-list a:hover, .tl-row:hover {
+  .disco-row:hover, .disco-row.hov, .follow-list a:hover, .tl-row:hover {
     padding-left: 8px; background: transparent;
   }
-  .follow-list a:active {
+  .disco-row:active, .follow-list a:active, .tl-row:active {
     background: color-mix(in oklab, var(--accent) 10%, transparent);
   }
+  /* Disco timeline tap states */
   .disco-card:hover { padding-left: 0; padding-right: 0; background: transparent; }
   .disco-card:active { background: color-mix(in oklab, var(--accent) 8%, transparent); }
+  /* Bigger underline for prose links on touch */
   .liner-copy a { padding: 2px 0; }
+  /* Increase font weight slightly on long-form mobile prose for clarity */
   .proj-prose p, .liner-copy p { font-weight: 400; }
 }

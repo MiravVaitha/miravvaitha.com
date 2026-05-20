@@ -1,36 +1,7 @@
-export type ProjectStatus = "shipped" | "in-progress" | "placeholder";
+// Content data for the portfolio prototype.
+// Lifted from /content/projects.ts and /content/experience.ts on the website-refresh branch.
 
-export type ProjectScreenshot = {
-  src: string;
-  caption: string;
-  wide?: boolean;
-};
-
-export type Project = {
-  slug: string;
-  title: string;
-  tech: string[];
-  blurb: string;
-  status: ProjectStatus;
-  cover?: string;
-  links?: {
-    live?: string;
-    github?: string;
-  };
-  /** Mock track length, used in cards + project hero */
-  duration: string;
-  year: string;
-  /** 0–360, drives the album-cover radial gradient */
-  hue: number;
-  role: string;
-  /** Play count or "—" */
-  plays: string;
-  /** Paragraphs for the project page body */
-  longform: string[];
-  screenshots?: ProjectScreenshot[];
-};
-
-export const projects: Project[] = [
+const PROJECTS = [
   {
     slug: "claritycast",
     title: "ClarityCast",
@@ -39,7 +10,7 @@ export const projects: Project[] = [
     duration: "4:12",
     status: "shipped",
     year: "2025",
-    hue: 18,
+    hue: 18, // rust
     role: "Solo · design + build",
     plays: "1.2K",
     longform: [
@@ -57,7 +28,7 @@ export const projects: Project[] = [
     duration: "3:48",
     status: "shipped",
     year: "2024",
-    hue: 320,
+    hue: 320, // magenta
     role: "Co-founder · ops + storefront",
     plays: "—",
     longform: [
@@ -75,7 +46,7 @@ export const projects: Project[] = [
     duration: "—:—",
     status: "in-progress",
     year: "2025",
-    hue: 200,
+    hue: 200, // cyan
     role: "Solo · design + build",
     plays: "—",
     longform: [
@@ -93,7 +64,7 @@ export const projects: Project[] = [
     duration: "5:21",
     status: "shipped",
     year: "2024",
-    hue: 50,
+    hue: 50, // amber
     role: "Solo · mechanical + firmware",
     plays: "—",
     longform: [
@@ -111,7 +82,7 @@ export const projects: Project[] = [
     duration: "3:02",
     status: "shipped",
     year: "2023",
-    hue: 140,
+    hue: 140, // sage
     role: "Solo · electronics + firmware",
     plays: "—",
     longform: [
@@ -128,7 +99,7 @@ export const projects: Project[] = [
     duration: "—:—",
     status: "placeholder",
     year: "2026",
-    hue: 260,
+    hue: 260, // violet
     role: "TBD",
     plays: "—",
     longform: [
@@ -137,3 +108,100 @@ export const projects: Project[] = [
     links: {},
   },
 ];
+
+const EXPERIENCE = [
+  {
+    org: "Capventis",
+    role: "Software Engineering Intern",
+    start: "Jun 2026",
+    end: "present",
+    url: "https://www.capventis.com/",
+    note: "Return placement",
+    duration: "—:—",
+    summary:
+      "Returning to Capventis for a second SWE internship this summer — building on the work from last year, with more ownership over delivery this time around.",
+  },
+  {
+    org: "Trinity College Dublin",
+    role: "BAI Engineering",
+    start: "2025",
+    end: "2029",
+    url: "https://www.tcd.ie/engineering/",
+    note: null,
+    duration: "—:—",
+    summary:
+      "Four-year Bachelor of Engineering. First-year curriculum spans mechanical, electrical, computer, and chemical engineering; specialising in computer / software in years three and four.",
+  },
+  {
+    org: "Capventis",
+    role: "Software Engineering Intern",
+    start: "Jul 2025",
+    end: "Sep 2025",
+    url: "https://www.capventis.com/",
+    note: null,
+    duration: "3:00",
+    summary:
+      "First internship: shipped features into a CRM integration platform, wrote SQL and back-end glue for a customer-data product, and learned the rhythm of working inside a real engineering team.",
+  },
+  {
+    org: "Freelance",
+    role: "Web Developer",
+    start: "2025",
+    end: "present",
+    url: null,
+    note: null,
+    duration: "—:—",
+    summary:
+      "Building Next.js websites for small businesses in Dublin — restaurants, service shops, individual professionals. Fast, mobile-first, easy to update.",
+  },
+  {
+    org: "Kroccustoms",
+    role: "Co-founder",
+    start: "2024",
+    end: "present",
+    url: "https://www.instagram.com/kroccustoms/",
+    note: null,
+    duration: "—:—",
+    summary:
+      "Co-founded a custom-clothing brand based in Dublin. Built the Shopify storefront, set the brand voice, liaised with printers, ran social. First sale taught me more than the next ten prototypes.",
+  },
+];
+
+const LINKS = [
+  {
+    label: "Email",
+    href: "mailto:mirav.vaitha@gmail.com",
+    handle: "mirav.vaitha@gmail.com",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/MiravVaitha",
+    handle: "MiravVaitha",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://ie.linkedin.com/in/mirav-vaitha-26078b389",
+    handle: "mirav-vaitha",
+  },
+];
+
+// Faux "now playing" rotating queue — stand-in for the live Spotify API
+// during prototype. In production this comes from /api/now-playing.
+const NOW_PLAYING_QUEUE = [
+  { track: "Strobe", artist: "Deadmau5", album: "For Lack of a Better Name", duration: 634, playing: true },
+  { track: "Redbone", artist: "Childish Gambino", album: "Awaken, My Love!", duration: 326, playing: true },
+  { track: "Nights", artist: "Frank Ocean", album: "Blonde", duration: 307, playing: true },
+  { track: "Time Alone with You", artist: "Jacob Collier ft. Daniel Caesar", album: "Djesse Vol. 3", duration: 257, playing: true },
+];
+
+// Gallery — placeholders for now. User drops in real photos later.
+const GALLERY = [
+  { id: "g1", caption: "Dublin · Liffey", ratio: "4/5", hue: 28 },
+  { id: "g2", caption: "Workbench, late", ratio: "1/1", hue: 200 },
+  { id: "g3", caption: "RC build", ratio: "4/3", hue: 50 },
+  { id: "g4", caption: "Trinity, Hilary term", ratio: "3/4", hue: 140 },
+  { id: "g5", caption: "Sketchbook", ratio: "1/1", hue: 320 },
+  { id: "g6", caption: "Studio", ratio: "4/5", hue: 260 },
+];
+
+Object.assign(window, { PROJECTS, EXPERIENCE, LINKS, NOW_PLAYING_QUEUE, GALLERY });

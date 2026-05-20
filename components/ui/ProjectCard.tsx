@@ -1,18 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
+import type { CSSProperties } from "react";
 import type { Project } from "@/content/projects";
-import { cn } from "@/lib/utils";
-
-// Gradient palette for placeholder covers. Cycled by index so cards have
-// some visual variety without us having to ship real cover art yet.
-const GRADIENTS = [
-  "from-emerald-900 via-neutral-900 to-neutral-950",
-  "from-purple-900 via-neutral-900 to-neutral-950",
-  "from-sky-900 via-neutral-900 to-neutral-950",
-  "from-rose-900 via-neutral-900 to-neutral-950",
-  "from-amber-900 via-neutral-900 to-neutral-950",
-  "from-teal-900 via-neutral-900 to-neutral-950",
-];
 
 type Props = {
   project: Project;
@@ -20,51 +8,47 @@ type Props = {
 };
 
 export function ProjectCard({ project, index }: Props) {
-  const gradient = GRADIENTS[index % GRADIENTS.length];
-  const initial = project.title.charAt(0).toUpperCase();
   const isPlaceholder = project.status === "placeholder";
+  const coverStyle = { "--h": project.hue } as CSSProperties;
 
   return (
     <Link
+      className={"track-card " + (isPlaceholder ? "is-placeholder " : "")}
       href={`/projects/${project.slug}`}
-      className="group block rounded-lg p-3 transition-colors hover:bg-neutral-900/60"
+      data-magnetic
     >
-      <div
-        className={cn(
-          "relative aspect-square overflow-hidden rounded-md border border-neutral-800 bg-gradient-to-br",
-          gradient,
-        )}
-      >
-        {project.cover ? (
-          <Image
-            src={project.cover}
-            alt={`${project.title} cover`}
-            fill
-            sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 90vw"
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="font-mono text-5xl font-bold text-neutral-700 sm:text-6xl">
-              {initial}
-            </span>
+      <div className="track-cover" style={coverStyle}>
+        <div className="cover-grain" />
+        <div className="cover-glyph mono">
+          {String(index + 1).padStart(2, "0")}
+        </div>
+        <div className="cover-title">{project.title}</div>
+        <div className="cover-hover">
+          <div className="cover-eq" aria-hidden>
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
           </div>
+          <div className="cover-play">▷ Preview</div>
+        </div>
+        {project.status === "in-progress" && (
+          <span className="cover-badge">IN PROGRESS</span>
+        )}
+        {project.status === "placeholder" && (
+          <span className="cover-badge">TBD</span>
         )}
       </div>
-      <div className="mt-3 space-y-1">
-        <div className="flex items-baseline justify-between gap-2">
-          <h3
-            className={cn(
-              "truncate text-base font-medium text-foreground",
-              isPlaceholder && "italic text-muted-foreground",
-            )}
-          >
-            {project.title}
-          </h3>
+      <div className="track-meta">
+        <div className="track-row">
+          <span className="track-name">{project.title}</span>
+          <span className="track-dur mono">{project.duration}</span>
         </div>
-        <p className="truncate font-mono text-xs text-muted-foreground">
-          {project.tech.length > 0 ? project.tech.join(" · ") : "—"}
-        </p>
+        <p className="track-blurb">{project.blurb}</p>
+        <div className="track-tech">
+          {project.tech.length ? project.tech.join(" · ") : "—"}
+        </div>
       </div>
     </Link>
   );

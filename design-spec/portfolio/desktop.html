@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Mirav Vaitha — Portfolio Refresh</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React + Babel -->
+    <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+    <!-- Bridge: expose UMD window.React / window.ReactDOM as ESM modules so
+         libraries loaded from esm.sh (which `import "react"`) share the *same*
+         React instance instead of bundling their own. Without this, hooks blow
+         up with "Cannot read properties of null (reading 'useState')". -->
+    <script>
+      (function () {
+        const reactKeys = [
+          "Children","Component","Fragment","Profiler","PureComponent","StrictMode",
+          "Suspense","__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED",
+          "cloneElement","createContext","createElement","createFactory","createRef",
+          "forwardRef","isValidElement","lazy","memo","startTransition","unstable_act",
+          "useCallback","useContext","useDebugValue","useDeferredValue","useEffect",
+          "useId","useImperativeHandle","useInsertionEffect","useLayoutEffect",
+          "useMemo","useReducer","useRef","useState","useSyncExternalStore",
+          "useTransition","version"
+        ];
+        const rdKeys = [
+          "createPortal","createRoot","hydrateRoot","findDOMNode","flushSync",
+          "render","unmountComponentAtNode","unstable_batchedUpdates","version"
+        ];
+        function stub(globalName, keys) {
+          const body =
+            "const M = window." + globalName + ";\n" +
+            "export default M;\n" +
+            keys.map((k) => "export const " + k + " = M." + k + ";").join("\n");
+          return URL.createObjectURL(new Blob([body], { type: "text/javascript" }));
+        }
+        const jsxBody = `
+          const R = window.React;
+          export const Fragment = R.Fragment;
+          function jsx(type, config, key) {
+            const props = {};
+            let children;
+            for (const k in config) {
+              if (k === "children") children = config[k];
+              else props[k] = config[k];
+            }
+            if (key !== undefined) props.key = key;
+            if (Array.isArray(children)) return R.createElement(type, props, ...children);
+            return R.createElement(type, props, children);
+          }
+          export { jsx, jsx as jsxs, jsx as jsxDEV };
+          export default { jsx, jsxs: jsx, jsxDEV: jsx, Fragment };
+        `;
+        const jsxUrl = URL.createObjectURL(new Blob([jsxBody], { type: "text/javascript" }));
+        const reactUrl = stub("React", reactKeys);
+        const rdUrl    = stub("ReactDOM", rdKeys);
+        const map = document.createElement("script");
+        map.type = "importmap";
+        map.textContent = JSON.stringify({
+          imports: {
+            "react":                  reactUrl,
+            "react/jsx-runtime":      jsxUrl,
+            "react/jsx-dev-runtime":  jsxUrl,
+            "react-dom":              rdUrl,
+            "react-dom/client":       rdUrl,
+          }
+        });
+        document.head.appendChild(map);
+      })();
+    </script>
+
+    <!-- Paper Shaders (Warp) — loaded as ESM via esm.sh -->
+    <script type="module">
+      try {
+        const mod = await import(
+          "https://esm.sh/@paper-design/shaders-react@0.0.76?external=react,react-dom"
+        );
+        window.Warp = mod.Warp;
+        window.dispatchEvent(new Event("shaders-ready"));
+      } catch (err) {
+        console.warn("Shader library failed to load:", err && err.message, err);
+      }
+    </script>
+
+    <!-- App pieces -->
+    <script type="text/babel" src="data.jsx"></script>
+    <script type="text/babel" src="theme.jsx"></script>
+    <script type="text/babel" src="chrome.jsx"></script>
+    <script type="text/babel" src="background.jsx"></script>
+    <script type="text/babel" src="sections.jsx"></script>
+    <script type="text/babel" src="tweaks-panel.jsx"></script>
+    <script type="text/babel" src="app.jsx"></script>
+  </body>
+</html>
