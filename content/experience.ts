@@ -1,0 +1,87 @@
+export type Experience = {
+  org: string;
+  role: string;
+  start: string;
+  end: string | null;
+  url?: string | null;
+  note?: string | null;
+  /** Mock track length, e.g. "3:00" */
+  duration?: string;
+  summary?: string;
+};
+
+// Order:
+//   1. Capventis return placement — only entry with end: "present", so it's
+//      the only one that renders the "Currently playing" pill + pulsing ring
+//      in Discography.
+//   2. Onwards in reverse chronological order from the CV.
+export const experience: Experience[] = [
+  {
+    org: "Capventis",
+    role: "Software Engineering Intern",
+    start: "Jun 2026",
+    end: "present",
+    url: "https://www.capventis.com/",
+    note: "Return placement",
+    duration: "—:—",
+    summary:
+      "Returning to Capventis for a second SWE internship this summer. Building on last year's work, with more ownership over delivery this time around.",
+  },
+  {
+    org: "Trinity Student Managed Fund",
+    role: "Analyst",
+    start: "Jan 2026",
+    end: "Apr 2026",
+    url: "https://trinitysmf.com/",
+    note: null,
+    duration: "4:00",
+    summary:
+      "Analysed hardware-sector companies. Conducted fundamental research on financial performance and valuation drivers. Contributed data-driven theses to the fund's investment discussions and capital allocation.",
+  },
+  {
+    org: "Capventis",
+    role: "Software Engineering Intern",
+    start: "Jul 2025",
+    end: "Sep 2025",
+    url: "https://www.capventis.com/",
+    note: null,
+    duration: "3:00",
+    summary:
+      "Wrote JavaScript test suites for Glu, an in-house business software platform, working within the existing codebase and shipping changes via GitHub. Built reusable helper functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team. Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers. Analysed large client datasets to support reporting and client-facing deliverables.",
+  },
+  {
+    org: "PureJewels",
+    role: "Retail Assistant",
+    start: "Jun 2023",
+    end: "Aug 2023",
+    url: "https://www.purejewels.com/",
+    note: null,
+    duration: "3:00",
+    summary:
+      "High-value retail role: customer service, inventory and stock control, visual merchandising. First taste of working a counter where every detail matters.",
+  },
+];
+
+export type SocialLink = {
+  label: string;
+  href: string;
+  handle: string;
+};
+
+export const links: SocialLink[] = [
+  {
+    label: "Email",
+    href: "mailto:miravvaitha@gmail.com",
+    handle: "miravvaitha@gmail.com",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/MiravVaitha",
+    handle: "MiravVaitha",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://ie.linkedin.com/in/mirav-vaitha-26078b389",
+    handle: "mirav-vaitha",
+  },
+];
