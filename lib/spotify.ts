@@ -77,62 +77,91 @@ type SpotifyItem = {
   external_urls: { spotify?: string };
 };
 
+function toTrack(item: SpotifyItem, opts: {
+  isPlaying: boolean;
+  progressMs: number | null;
+  playedAt: string | null;
+}): SpotifyTrack | null {
+  if (!item?.name) return null;
+  return {
+    isPlaying: opts.isPlaying,
+    track: item.name,
+    artist: (item.artists ?? []).map((a) => a.name).filter(Boolean).join(", "),
+    album: item.album?.name ?? "",
+    albumArtUrl: item.album?.images?.[0]?.url ?? null,
+    songUrl: item.external_urls?.spotify ?? null,
+    progressMs: opts.progressMs,
+    durationMs: item.duration_ms ?? 0,
+    playedAt: opts.playedAt,
+  };
+}
+
+// In-memory cache of the last successful response. Lets us keep returning
+// real track data when Spotify briefly errors, rate-limits, or returns an
+// unexpected shape. Persists for the lifetime of the serverless instance.
+let lastKnown: SpotifyTrack | null = null;
+
 export async function getNowPlaying(): Promise<SpotifyTrack | null> {
   const token = await getAccessToken();
-  if (!token) return null;
+  if (!token) return lastKnown;
 
-  // First: try currently playing.
-  const currentRes = await fetch(CURRENTLY_PLAYING_ENDPOINT, {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
-  });
-
-  // 200 with body = something is loaded (playing or paused).
-  // 204 = nothing playing, fall through to recently-played.
-  if (currentRes.status === 200) {
-    const data = (await currentRes.json()) as {
-      is_playing: boolean;
-      progress_ms: number;
-      item: SpotifyItem | null;
-    };
-    if (data.item) {
-      return {
-        isPlaying: data.is_playing,
-        track: data.item.name,
-        artist: data.item.artists.map((a) => a.name).join(", "),
-        album: data.item.album.name,
-        albumArtUrl: data.item.album.images[0]?.url ?? null,
-        songUrl: data.item.external_urls.spotify ?? null,
-        progressMs: data.progress_ms,
-        durationMs: data.item.duration_ms,
-        playedAt: null,
+  // 1. Try currently playing.
+  try {
+    const currentRes = await fetch(CURRENTLY_PLAYING_ENDPOINT, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    // 200 with body = something is loaded (playing or paused).
+    // 204 = nothing playing, fall through to recently-played.
+    if (currentRes.status === 200) {
+      const data = (await currentRes.json()) as {
+        is_playing: boolean;
+        progress_ms: number;
+        item: SpotifyItem | null;
       };
+      if (data?.item) {
+        const result = toTrack(data.item, {
+          isPlaying: !!data.is_playing,
+          progressMs: data.progress_ms ?? null,
+          playedAt: null,
+        });
+        if (result) {
+          lastKnown = result;
+          return result;
+        }
+      }
     }
+  } catch {
+    // fall through to recently-played
   }
 
-  // Fall back to recently played.
-  const recentRes = await fetch(RECENTLY_PLAYED_ENDPOINT, {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
-  });
+  // 2. Fall back to recently played.
+  try {
+    const recentRes = await fetch(RECENTLY_PLAYED_ENDPOINT, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    if (recentRes.ok) {
+      const recentData = (await recentRes.json()) as {
+        items: Array<{ track: SpotifyItem; played_at: string }>;
+      };
+      const recent = recentData.items?.[0];
+      if (recent?.track) {
+        const result = toTrack(recent.track, {
+          isPlaying: false,
+          progressMs: null,
+          playedAt: recent.played_at ?? null,
+        });
+        if (result) {
+          lastKnown = result;
+          return result;
+        }
+      }
+    }
+  } catch {
+    // fall through to cached
+  }
 
-  if (!recentRes.ok) return null;
-
-  const recentData = (await recentRes.json()) as {
-    items: Array<{ track: SpotifyItem; played_at: string }>;
-  };
-  const recent = recentData.items?.[0];
-  if (!recent) return null;
-
-  return {
-    isPlaying: false,
-    track: recent.track.name,
-    artist: recent.track.artists.map((a) => a.name).join(", "),
-    album: recent.track.album.name,
-    albumArtUrl: recent.track.album.images[0]?.url ?? null,
-    songUrl: recent.track.external_urls.spotify ?? null,
-    progressMs: null,
-    durationMs: recent.track.duration_ms,
-    playedAt: recent.played_at,
-  };
+  // 3. Both failed — serve the last successful response if we have one.
+  return lastKnown;
 }

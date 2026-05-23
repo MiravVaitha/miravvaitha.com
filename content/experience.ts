@@ -10,6 +10,11 @@ export type Experience = {
   summary?: string;
 };
 
+// Order:
+//   1. Capventis return placement — only entry with end: "present", so it's
+//      the only one that renders the "Currently playing" pill + pulsing ring
+//      in Discography.
+//   2. Onwards in reverse chronological order from the CV.
 export const experience: Experience[] = [
   {
     org: "Capventis",
@@ -20,18 +25,18 @@ export const experience: Experience[] = [
     note: "Return placement",
     duration: "—:—",
     summary:
-      "Returning to Capventis for a second SWE internship this summer — building on the work from last year, with more ownership over delivery this time around.",
+      "Returning to Capventis for a second SWE internship this summer. Building on last year's work, with more ownership over delivery this time around.",
   },
   {
-    org: "Trinity College Dublin",
-    role: "BAI Engineering",
-    start: "2025",
-    end: "2029",
-    url: "https://www.tcd.ie/engineering/",
+    org: "Trinity Student Managed Fund",
+    role: "Analyst",
+    start: "Jan 2026",
+    end: "Apr 2026",
+    url: "https://trinitysmf.com/",
     note: null,
-    duration: "—:—",
+    duration: "4:00",
     summary:
-      "Four-year Bachelor of Engineering. First-year curriculum spans mechanical, electrical, computer, and chemical engineering; specialising in computer / software in years three and four.",
+      "Analysed hardware-sector companies. Conducted fundamental research on financial performance and valuation drivers. Contributed data-driven theses to the fund's investment discussions and capital allocation.",
   },
   {
     org: "Capventis",
@@ -42,29 +47,18 @@ export const experience: Experience[] = [
     note: null,
     duration: "3:00",
     summary:
-      "First internship: shipped features into a CRM integration platform, wrote SQL and back-end glue for a customer-data product, and learned the rhythm of working inside a real engineering team.",
+      "Wrote JavaScript test suites for Glu, an in-house business software platform, working within the existing codebase and shipping changes via GitHub. Built reusable helper functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team. Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers. Analysed large client datasets to support reporting and client-facing deliverables.",
   },
   {
-    org: "Freelance",
-    role: "Web Developer",
-    start: "2025",
-    end: "present",
-    url: null,
+    org: "PureJewels",
+    role: "Retail Assistant",
+    start: "Jun 2023",
+    end: "Aug 2023",
+    url: "https://www.purejewels.com/",
     note: null,
-    duration: "—:—",
+    duration: "3:00",
     summary:
-      "Building Next.js websites for small businesses in Dublin — restaurants, service shops, individual professionals. Fast, mobile-first, easy to update.",
-  },
-  {
-    org: "Kroccustoms",
-    role: "Co-founder",
-    start: "2024",
-    end: "present",
-    url: "https://www.instagram.com/kroccustoms/",
-    note: null,
-    duration: "—:—",
-    summary:
-      "Co-founded a custom-clothing brand based in Dublin. Built the Shopify storefront, set the brand voice, liaised with printers, ran social. First sale taught me more than the next ten prototypes.",
+      "High-value retail role: customer service, inventory and stock control, visual merchandising. First taste of working a counter where every detail matters.",
   },
 ];
 
@@ -77,8 +71,8 @@ export type SocialLink = {
 export const links: SocialLink[] = [
   {
     label: "Email",
-    href: "mailto:mirav.vaitha@gmail.com",
-    handle: "mirav.vaitha@gmail.com",
+    href: "mailto:miravvaitha@gmail.com",
+    handle: "miravvaitha@gmail.com",
   },
   {
     label: "GitHub",

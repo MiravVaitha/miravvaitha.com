@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { Project } from "@/content/projects";
@@ -5,19 +6,41 @@ import type { Project } from "@/content/projects";
 type Props = {
   project: Project;
   index: number;
+  active?: boolean;
 };
 
-export function ProjectCard({ project, index }: Props) {
+export function ProjectCard({ project, index, active = false }: Props) {
   const isPlaceholder = project.status === "placeholder";
   const coverStyle = { "--h": project.hue } as CSSProperties;
+  const className = [
+    "track-card",
+    isPlaceholder ? "is-placeholder" : null,
+    active ? "is-active" : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <Link
-      className={"track-card " + (isPlaceholder ? "is-placeholder " : "")}
+      className={className}
       href={`/projects/${project.slug}`}
+      data-slug={project.slug}
       data-magnetic
     >
       <div className="track-cover" style={coverStyle}>
+        {project.cover && (
+          <>
+            <Image
+              src={project.cover}
+              alt={`${project.title} cover`}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              unoptimized={project.cover.endsWith(".svg")}
+              className="track-cover-img"
+            />
+            <div className="track-cover-shade" aria-hidden />
+          </>
+        )}
         <div className="cover-grain" />
         <div className="cover-glyph mono">
           {String(index + 1).padStart(2, "0")}
@@ -33,6 +56,9 @@ export function ProjectCard({ project, index }: Props) {
           </div>
           <div className="cover-play">▷ Preview</div>
         </div>
+        {project.status === "shipped" && (
+          <span className="cover-badge">DONE</span>
+        )}
         {project.status === "in-progress" && (
           <span className="cover-badge">IN PROGRESS</span>
         )}

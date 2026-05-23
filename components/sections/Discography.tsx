@@ -37,7 +37,7 @@ export function Discography() {
       <SectionHeader
         number="03"
         title="Discography"
-        sub="Roles & places, in chronological reverse"
+        sub="Roles & Experience to date"
       />
       <div className="disco-timeline" ref={listRef} style={railStyle}>
         <div className="disco-rail" aria-hidden>

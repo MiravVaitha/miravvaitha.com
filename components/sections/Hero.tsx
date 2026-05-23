@@ -1,4 +1,5 @@
 import { NowPlaying } from "@/components/ui/NowPlaying";
+import { HeroContacts } from "@/components/ui/HeroContacts";
 
 export function Hero() {
   return (
@@ -8,12 +9,9 @@ export function Hero() {
       </div>
       <h1 className="hero-name hero-name-center">Mirav Vaitha</h1>
       <p className="hero-tag">
-        <em>Engineer, builder, occasional shipper of small things.</em>
+        <em>19 Y/O Engineer and Builder from Ireland.</em>
       </p>
-      <p className="hero-credits">
-        Engineering @ Trinity College Dublin &nbsp;·&nbsp; SWE Intern @
-        Capventis &nbsp;·&nbsp; Based in Dublin
-      </p>
+      <HeroContacts />
       <div className="hero-np-center">
         <NowPlaying compact />
       </div>

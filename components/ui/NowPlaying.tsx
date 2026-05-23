@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { SpotifyTrack } from "@/lib/spotify";
 
 const POLL_INTERVAL_MS = 30_000;
+const STORAGE_KEY = "np-last-known";
 
 function fmt(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
@@ -25,12 +26,34 @@ export function NowPlaying({ compact = false }: Props) {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
+    // Hydrate from localStorage immediately so the widget never starts blank
+    // on a cold visit (covers the case where the API also returns null
+    // briefly, e.g. cold serverless instance with no cached data).
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        setData(JSON.parse(stored) as SpotifyTrack);
+        setLoaded(true);
+      }
+    } catch {
+      // ignore localStorage failures (private mode, quota, etc.)
+    }
+
     async function tick() {
       try {
         const res = await fetch("/api/now-playing", { cache: "no-store" });
         const next = (await res.json()) as SpotifyTrack | null;
         if (cancelled) return;
-        setData(next);
+        // Only overwrite with a real response — never blank out the widget
+        // because of a transient null from the API.
+        if (next) {
+          setData(next);
+          try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          } catch {
+            // ignore
+          }
+        }
         setLoaded(true);
       } catch {
         if (!cancelled) setLoaded(true);

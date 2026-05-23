@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="zen-bg" cx="30%" cy="25%" r="85%">
+      <stop offset="0%" stop-color="#3eb5a4" />
+      <stop offset="40%" stop-color="#176f63" />
+      <stop offset="100%" stop-color="#0c3a34" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="1200" fill="url(#zen-bg)" />
+
+  <g transform="translate(600 600)">
+    <rect x="-220" y="-360" width="440" height="720" rx="52"
+          fill="rgba(8,28,26,0.55)"
+          stroke="rgba(255,255,255,0.88)" stroke-width="5" />
+    <rect x="-196" y="-336" width="392" height="672" rx="36"
+          fill="rgba(255,255,255,0.04)" />
+
+    <rect x="-48" y="-336" width="96" height="24" rx="12"
+          fill="rgba(255,255,255,0.55)" />
+
+    <rect x="-160" y="-280" width="80" height="6" rx="3" fill="rgba(255,255,255,0.5)" />
+    <rect x="-160" y="-264" width="120" height="6" rx="3" fill="rgba(255,255,255,0.3)" />
+    <rect x="120" y="-280" width="40" height="6" rx="3" fill="rgba(255,255,255,0.5)" />
+
+    <rect x="-160" y="-228" width="200" height="26" rx="5" fill="rgba(255,255,255,0.92)" />
+    <rect x="-160" y="-194" width="130" height="9" rx="4" fill="rgba(255,255,255,0.45)" />
+
+    <rect x="-176" y="-150" width="352" height="92" rx="16"
+          fill="rgba(255,255,255,0.10)"
+          stroke="rgba(255,255,255,0.22)" stroke-width="1.5" />
+    <rect x="-160" y="-126" width="8" height="48" rx="4" fill="rgba(255,255,255,0.6)" />
+    <rect x="-138" y="-120" width="200" height="11" rx="3" fill="rgba(255,255,255,0.82)" />
+    <rect x="-138" y="-98" width="150" height="9" rx="3" fill="rgba(255,255,255,0.5)" />
+
+    <rect x="-176" y="-40" width="352" height="92" rx="16"
+          fill="rgba(93,176,119,0.22)"
+          stroke="rgba(93,176,119,0.6)" stroke-width="1.5" />
+    <rect x="-160" y="-16" width="8" height="48" rx="4" fill="#5db077" />
+    <rect x="-138" y="-10" width="220" height="11" rx="3" fill="rgba(255,255,255,0.95)" />
+    <rect x="-138" y="12" width="180" height="9" rx="3" fill="rgba(255,255,255,0.65)" />
+    <g transform="translate(118 -22)">
+      <rect x="0" y="0" width="46" height="22" rx="11" fill="#5db077" />
+      <text x="23" y="16" text-anchor="middle"
+            font-family="ui-monospace, 'SF Mono', Menlo, monospace"
+            font-size="12" font-weight="700"
+            fill="#0c3a34">AI</text>
+    </g>
+
+    <rect x="-176" y="70" width="352" height="92" rx="16"
+          fill="rgba(255,255,255,0.10)"
+          stroke="rgba(255,255,255,0.22)" stroke-width="1.5" />
+    <rect x="-160" y="94" width="8" height="48" rx="4" fill="rgba(255,255,255,0.6)" />
+    <rect x="-138" y="100" width="180" height="11" rx="3" fill="rgba(255,255,255,0.82)" />
+    <rect x="-138" y="122" width="160" height="9" rx="3" fill="rgba(255,255,255,0.5)" />
+
+    <rect x="-176" y="198" width="352" height="124" rx="16"
+          fill="rgba(0,0,0,0.38)"
+          stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+    <g transform="translate(-130 240)" fill="#5db077">
+      <path d="M 0,-14 L 3,-3 L 14,0 L 3,3 L 0,14 L -3,3 L -14,0 L -3,-3 Z" />
+    </g>
+    <rect x="-100" y="226" width="200" height="11" rx="3" fill="rgba(255,255,255,0.85)" />
+    <rect x="-100" y="246" width="160" height="9" rx="3" fill="rgba(255,255,255,0.5)" />
+    <rect x="-100" y="264" width="220" height="9" rx="3" fill="rgba(255,255,255,0.5)" />
+    <rect x="-100" y="282" width="140" height="9" rx="3" fill="rgba(255,255,255,0.5)" />
+  </g>
+
+  <g fill="rgba(255,255,255,0.62)">
+    <g transform="translate(220 280) rotate(15)">
+      <path d="M 0,-26 L 5,-5 L 26,0 L 5,5 L 0,26 L -5,5 L -26,0 L -5,-5 Z" />
+    </g>
+    <g transform="translate(1000 240) rotate(-10)" opacity="0.85">
+      <path d="M 0,-20 L 4,-4 L 20,0 L 4,4 L 0,20 L -4,4 L -20,0 L -4,-4 Z" />
+    </g>
+    <g transform="translate(1040 760) rotate(20)" opacity="0.7">
+      <path d="M 0,-15 L 3,-3 L 15,0 L 3,3 L 0,15 L -3,3 L -15,0 L -3,-3 Z" />
+    </g>
+    <g transform="translate(160 920) rotate(-25)" opacity="0.55">
+      <path d="M 0,-18 L 4,-4 L 18,0 L 4,4 L 0,18 L -4,4 L -18,0 L -4,-4 Z" />
+    </g>
+  </g>
+
+  <text x="1100" y="110"
+        font-family="ui-monospace, 'SF Mono', Menlo, monospace"
+        font-size="22" letter-spacing="4" text-anchor="end"
+        fill="rgba(255,255,255,0.5)">SIDE A · TRK 01</text>
+</svg>

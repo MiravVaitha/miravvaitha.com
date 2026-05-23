@@ -12,7 +12,6 @@ const MARQUEE_ITEMS = [
   "Dublin, IE",
   "Currently shipping",
   "ClarityCast · Capventis · Trinity",
-  "Available for freelance",
 ];
 
 export default function Home() {

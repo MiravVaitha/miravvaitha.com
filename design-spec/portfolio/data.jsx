@@ -170,8 +170,8 @@ const EXPERIENCE = [
 const LINKS = [
   {
     label: "Email",
-    href: "mailto:mirav.vaitha@gmail.com",
-    handle: "mirav.vaitha@gmail.com",
+    href: "mailto:miravvaitha@gmail.com",
+    handle: "miravvaitha@gmail.com",
   },
   {
     label: "GitHub",
