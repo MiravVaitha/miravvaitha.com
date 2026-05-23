@@ -79,7 +79,8 @@ export async function GET() {
     report.tokenRequest = {
       status: tokenRes.status,
       ok: tokenRes.ok,
-      bodySnippet: tokenBody.slice(0, 200),
+      // Only show body on failure — success body contains the access_token.
+      bodySnippet: tokenRes.ok ? "[redacted: token]" : tokenBody.slice(0, 200),
     };
 
     if (!tokenRes.ok) {
@@ -104,7 +105,10 @@ export async function GET() {
     report.currentlyPlaying = {
       status: currentRes.status,
       ok: currentRes.ok,
-      bodySnippet: currentBody.slice(0, 200),
+      // Track name + artist could leak; only show error bodies and length on success.
+      bodySnippet: currentRes.ok
+        ? `[ok: ${currentBody.length} bytes]`
+        : currentBody.slice(0, 200),
     };
 
     const recentRes = await fetch(
@@ -118,7 +122,9 @@ export async function GET() {
     report.recentlyPlayed = {
       status: recentRes.status,
       ok: recentRes.ok,
-      bodySnippet: recentBody.slice(0, 200),
+      bodySnippet: recentRes.ok
+        ? `[ok: ${recentBody.length} bytes]`
+        : recentBody.slice(0, 200),
     };
 
     return NextResponse.json(report);
