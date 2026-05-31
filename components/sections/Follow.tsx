@@ -118,7 +118,7 @@ export function Follow() {
                 data-magnetic
               >
                 <span className="follow-label">{l.label}</span>
-                <span className="follow-handle mono">{l.handle}</span>
+                <span aria-hidden />
                 <span className="follow-arrow" aria-hidden>
                   ↗
                 </span>

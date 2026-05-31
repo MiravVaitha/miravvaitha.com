@@ -47,7 +47,7 @@ export const experience: Experience[] = [
     note: null,
     duration: "3:00",
     summary:
-      "Wrote JavaScript test suites for Glu, an in-house business software platform, working within the existing codebase and shipping changes via GitHub. Built reusable helper functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team. Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers. Analysed large client datasets to support reporting and client-facing deliverables.",
+      "Wrote end-to-end test suites for Glu, an in-house business software platform using Playwright in JavaScript, working within the existing codebase and shipping changes via GitHub. Built reusable functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team. Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers. Analysed large client datasets to support reporting and client-facing deliverables.",
   },
   {
     org: "PureJewels",

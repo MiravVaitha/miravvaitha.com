@@ -57,8 +57,9 @@ const projectsRaw: Project[] = [
     longform: [
       "Currently building an AI-powered mobile app extension with [Shaurya Kapoor](https://www.shauryakapoor.com/) that integrates into your keyboard and can be used in messaging apps to simplify event organising.",
       "Automatically creates an event roadmap, payment splitters, Google Calendar invites, shared photo albums, location links, and more.",
+      "Public beta launching on the App Store and Google Play soon. Stay tuned!",
     ],
-    cover: "/projects/zenemic/cover.svg",
+    cover: "/projects/zenemic/cover.png",
     links: {},
   },
   {
@@ -112,7 +113,7 @@ const projectsRaw: Project[] = [
   {
     slug: "line-follower",
     title: "Line-Following Vehicle",
-    tech: ["Micro:bit", "Embedded Systems", "Electronics", "JavaScript"],
+    tech: ["Micro:bit", "Embedded Systems", "Electronics", "JavaScript, Onshape"],
     blurb: "Autonomous line-follower with sensor-tuned motor control.",
     duration: "4:23",
     status: "shipped",
