@@ -18,14 +18,14 @@ export type Experience = {
 export const experience: Experience[] = [
   {
     org: "Capventis",
-    role: "Software Engineering Intern",
+    role: "Software Engineer in Test (Internship)",
     start: "Jun 2026",
     end: "present",
     url: "https://www.capventis.com/",
     note: "Return placement",
     duration: "—:—",
     summary:
-      "Returning to Capventis for a second SWE internship this summer. Building on last year's work, with more ownership over delivery this time around.",
+      "Building on the previous summer's work, currently focused on API testing in TypeScript and SQL.",
   },
   {
     org: "Trinity Student Managed Fund",
@@ -40,14 +40,14 @@ export const experience: Experience[] = [
   },
   {
     org: "Capventis",
-    role: "Software Engineering Intern",
+    role: "Software Engineer in Test (Internship)",
     start: "Jul 2025",
     end: "Sep 2025",
     url: "https://www.capventis.com/",
     note: null,
     duration: "3:00",
     summary:
-      "Wrote end-to-end test suites for Glu, an in-house business software platform using Playwright in JavaScript, working within the existing codebase and shipping changes via GitHub. Built reusable functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team. Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers. Analysed large client datasets to support reporting and client-facing deliverables.",
+      "Wrote end-to-end test suites for Glu, a business data integration platform using Playwright in JavaScript, working within the existing codebase and shipping changes via GitHub. Built reusable functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team. Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers. Analysed large client datasets to support reporting and client-facing deliverables.",
   },
   {
     org: "PureJewels",

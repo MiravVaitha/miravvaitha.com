@@ -14,7 +14,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const BIO_LINES = [
   "ENGINEERING @ TRINITY COLLEGE DUBLIN",
-  "SWE INTERN @ CAPVENTIS · '25/'26",
+  "SWET INTERN @ CAPVENTIS · '25/'26",
   "STARTUPS · SOFTWARE · HARDWARE",
   "CO-FOUNDER · KROCCUSTOMS",
   "BUILT CLARITYCAST, PHARMSTABLE & MORE",
