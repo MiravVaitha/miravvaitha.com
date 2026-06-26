@@ -10,8 +10,8 @@ const MARQUEE_ITEMS = [
   "Now Playing · Mirav Vaitha",
   "Side A · Track 01",
   "Dublin, IE",
-  "Currently shipping",
-  "ClarityCast · Capventis · Trinity",
+  "Currently building",
+  "Design · Hardware · Software & AI",
 ];
 
 export default function Home() {

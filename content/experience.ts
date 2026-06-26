@@ -31,12 +31,12 @@ export const experience: Experience[] = [
     org: "Trinity Student Managed Fund",
     role: "Analyst",
     start: "Jan 2026",
-    end: "Apr 2026",
+    end: "May 2026",
     url: "https://trinitysmf.com/",
     note: null,
     duration: "4:00",
     summary:
-      "Analysed hardware-sector companies. Conducted fundamental research on financial performance and valuation drivers. Contributed data-driven theses to the fund's investment discussions and capital allocation.",
+      "Analysed hardware-sector companies for Europe's largest student-managed fund.",
   },
   {
     org: "Capventis",
@@ -58,7 +58,7 @@ export const experience: Experience[] = [
     note: null,
     duration: "3:00",
     summary:
-      "High-value retail role: customer service, inventory and stock control, visual merchandising. First taste of working a counter where every detail matters.",
+      "High-value retail role: customer service, inventory and stock control, visual merchandising.",
   },
 ];
 
