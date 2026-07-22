@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { experience, type Experience } from "@/content/experience";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -62,38 +63,51 @@ function DiscoEntry({ entry, index }: { entry: Experience; index: number }) {
         {isCurrent && <span className="disco-pulse" />}
       </div>
       <div className="disco-card">
-        <div className="disco-track-meta">
-          <span className="disco-num mono">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          {isCurrent && (
-            <span className="disco-now-tag mono">
-              <span className="disco-now-dot" /> Currently playing
+        <div className="disco-card-body">
+          <div className="disco-track-meta">
+            <span className="disco-num mono">
+              {String(index + 1).padStart(2, "0")}
             </span>
-          )}
+            {isCurrent && (
+              <span className="disco-now-tag mono">
+                <span className="disco-now-dot" /> Currently playing
+              </span>
+            )}
+          </div>
+          <h3 className="disco-role">
+            {entry.role} <span className="disco-at">@</span>{" "}
+            {entry.url ? (
+              <a
+                href={entry.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="disco-org-link"
+              >
+                {entry.org}
+              </a>
+            ) : (
+              <span className="disco-org-link">{entry.org}</span>
+            )}
+          </h3>
+          <div className="disco-meta-line">
+            <span className="mono">
+              {entry.start} → {entry.end ?? "—"}
+            </span>
+            {entry.note && <span className="disco-note">· {entry.note}</span>}
+          </div>
+          {entry.summary && <p className="disco-summary">{entry.summary}</p>}
         </div>
-        <h3 className="disco-role">
-          {entry.role} <span className="disco-at">@</span>{" "}
-          {entry.url ? (
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="disco-org-link"
-            >
-              {entry.org}
-            </a>
-          ) : (
-            <span className="disco-org-link">{entry.org}</span>
-          )}
-        </h3>
-        <div className="disco-meta-line">
-          <span className="mono">
-            {entry.start} → {entry.end ?? "—"}
-          </span>
-          {entry.note && <span className="disco-note">· {entry.note}</span>}
-        </div>
-        {entry.summary && <p className="disco-summary">{entry.summary}</p>}
+        {entry.logo && (
+          <div className="disco-logo" aria-hidden>
+            <Image
+              src={entry.logo}
+              alt=""
+              width={48}
+              height={48}
+              className="disco-logo-img"
+            />
+          </div>
+        )}
       </div>
     </li>
   );
