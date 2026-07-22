@@ -222,6 +222,35 @@ const projectsRaw: Project[] = [
     ],
     links: { live: "https://kingshospital.ie/kh-entrepreneurs-in-the-making/" },
   },
+  {
+    slug: "faceless",
+    title: "Faceless",
+    tech: ["React", "Three.js", "TypeScript", "Tauri"],
+    blurb:
+      "Faceless is a Nextbot-style horror game: upload any photo and that face becomes the thing chasing you through a fog-drenched night city.",
+    duration: "3:33",
+    status: "shipped",
+    year: "2026",
+    hue: 300,
+    role: "Solo · design + build",
+    plays: "666",
+    // DRAFT generated from the GitHub README; edit freely.
+    longform: [
+      "Faceless is a first-person horror-chase game in the style of Garry's Mod Nextbots. Upload a photo of anyone and that face becomes a flat 2D sprite that hunts you through a fogged night city. Sprinting alone barely outruns it, so you chain bunny-hops for airborne speed, and a timer keeps your best survival run on local record.",
+      "Built with React Three Fiber, three.js, and Zustand, with Tauri or Electron shells for a desktop build. The bot chases with A* pathfinding recomputed on a short delay, so it overshoots corners the way a proper Nextbot should. The repo ships zero binary assets: every texture is painted onto canvases at load, and every sound, from footsteps to the jumpscare sting, is synthesized with the Web Audio API.",
+      "As the face closes in, a red vignette, screen shake, and an accelerating heartbeat give away how much trouble you're in, and getting caught ends in a full-screen jumpscare. Best played by handing the keyboard to someone with their own face loaded in.",
+    ],
+    cover: "/projects/faceless/cover.png",
+    screenshots: [
+      { src: "/projects/faceless/screen-1.png", caption: "The street, seconds before it isn't empty" },
+      { src: "/projects/faceless/screen-2.png", caption: "Upload a face. Then run." },
+      { src: "/projects/faceless/screen-3.png", caption: "It doesn't stop" },
+      { src: "/projects/faceless/screen-4.png", caption: "A new best, apparently" },
+    ],
+    links: {
+      github: "https://github.com/MiravVaitha/faceless",
+    },
+  },
 
   // ── Next ────────────────────────────────────────────────────────────────
   {
