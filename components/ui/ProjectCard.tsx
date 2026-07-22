@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import { memo, type CSSProperties } from "react";
 import type { Project } from "@/content/projects";
 
 type Props = {
@@ -9,7 +9,13 @@ type Props = {
   active?: boolean;
 };
 
-export function ProjectCard({ project, index, active = false }: Props) {
+// Memoized: TopTracks flips `active` on scroll, and without memo every flip
+// re-rendered all nine cards instead of the two whose prop changed.
+export const ProjectCard = memo(function ProjectCard({
+  project,
+  index,
+  active = false,
+}: Props) {
   const isPlaceholder = project.status === "placeholder";
   const coverStyle = { "--h": project.hue } as CSSProperties;
   const className = [
@@ -78,4 +84,4 @@ export function ProjectCard({ project, index, active = false }: Props) {
       </div>
     </Link>
   );
-}
+});

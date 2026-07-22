@@ -19,6 +19,11 @@ export function BackgroundShader() {
       <div className="bg-shader" aria-hidden>
         <Warp
           style={{ width: "100%", height: "100%" }}
+          // Cap the WebGL canvas at ~1.6MP regardless of devicePixelRatio.
+          // The warp is soft, so rendering at display DPR (2-4x the pixels on
+          // scaled Windows/retina screens) burns GPU for no visible gain and
+          // competes with scroll compositing.
+          maxPixelCount={1_600_000}
           proportion={0.45}
           softness={1}
           distortion={0.25}

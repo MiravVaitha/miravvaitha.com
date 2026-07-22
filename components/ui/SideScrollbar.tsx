@@ -2,45 +2,58 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type Metrics = {
-  thumb: number;
-  pos: number;
-  hidden: boolean;
-};
-
 // Replaces the native browser scrollbar with a thin track on the right edge.
-// Thumb is sized proportionally to viewport/document and draggable.
+// Thumb is sized proportionally to viewport/document and draggable. Scroll
+// updates are rAF-throttled and mutate the thumb's style directly, so
+// scrolling never triggers a React re-render (the previous setState-per-scroll
+// was a measurable jank source).
 export function SideScrollbar() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const [metrics, setMetrics] = useState<Metrics>({
-    thumb: 0,
-    pos: 0,
-    hidden: true,
-  });
+  const thumbRef = useRef<HTMLDivElement | null>(null);
+  const thumbH = useRef(0);
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    function measure() {
+    let raf = 0;
+
+    function update() {
+      raf = 0;
+      const root = rootRef.current;
+      const thumb = thumbRef.current;
+      if (!root || !thumb) return;
       const vh = window.innerHeight;
       const dh = document.documentElement.scrollHeight;
       if (dh <= vh + 4) {
-        setMetrics({ thumb: 0, pos: 0, hidden: true });
+        root.style.display = "none";
+        thumbH.current = 0;
         return;
       }
+      root.style.display = "";
       const trackH = vh - 32;
-      const thumbH = Math.max(32, (vh / dh) * trackH);
+      const h = Math.max(32, (vh / dh) * trackH);
       const max = dh - vh;
-      const pos = (window.scrollY / max) * (trackH - thumbH);
-      setMetrics({ thumb: thumbH, pos, hidden: false });
+      const pos = (window.scrollY / max) * (trackH - h);
+      if (h !== thumbH.current) {
+        thumbH.current = h;
+        thumb.style.height = h + "px";
+      }
+      thumb.style.transform = `translateY(${pos}px)`;
     }
-    measure();
-    window.addEventListener("scroll", measure, { passive: true });
-    window.addEventListener("resize", measure);
-    const ro = new ResizeObserver(measure);
+
+    function schedule() {
+      if (!raf) raf = requestAnimationFrame(update);
+    }
+
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    const ro = new ResizeObserver(schedule);
     ro.observe(document.body);
     return () => {
-      window.removeEventListener("scroll", measure);
-      window.removeEventListener("resize", measure);
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
       ro.disconnect();
     };
   }, []);
@@ -53,12 +66,12 @@ export function SideScrollbar() {
     const rect = trackRef.current.getBoundingClientRect();
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const trackH = rect.height;
-    const thumbH = metrics.thumb;
+    const h = thumbH.current;
 
     function moveTo(clientY: number) {
-      const offsetY = clientY - rect.top - thumbH / 2;
-      const clamped = Math.max(0, Math.min(trackH - thumbH, offsetY));
-      const pct = clamped / (trackH - thumbH);
+      const offsetY = clientY - rect.top - h / 2;
+      const clamped = Math.max(0, Math.min(trackH - h, offsetY));
+      const pct = clamped / (trackH - h);
       window.scrollTo({ top: max * pct, behavior: "auto" });
     }
 
@@ -77,23 +90,20 @@ export function SideScrollbar() {
     window.addEventListener("pointerup", up);
   }
 
-  if (metrics.hidden) return null;
-
   return (
-    <div className="side-scroll" aria-hidden>
+    <div
+      ref={rootRef}
+      className="side-scroll"
+      style={{ display: "none" }}
+      aria-hidden
+    >
       <div
         ref={trackRef}
         className={"ss-track " + (active ? "ss-active" : "")}
         onPointerDown={onDown}
         data-magnetic
       >
-        <div
-          className="ss-thumb"
-          style={{
-            height: metrics.thumb,
-            transform: `translateY(${metrics.pos}px)`,
-          }}
-        />
+        <div ref={thumbRef} className="ss-thumb" />
       </div>
     </div>
   );

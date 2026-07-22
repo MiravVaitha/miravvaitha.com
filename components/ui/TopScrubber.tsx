@@ -1,24 +1,42 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-// Top-of-page progress bar — scroll position as a track-progress, clickable
-// to seek.
+// Top-of-page progress bar showing scroll position as track-progress, clickable
+// to seek. Scroll updates are rAF-throttled and write styles directly on refs,
+// so scrolling never triggers a React re-render (setState per scroll event was
+// a measurable jank source).
 export function TopScrubber() {
-  const [pct, setPct] = useState(0);
+  const barRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const fillRef = useRef<HTMLDivElement | null>(null);
+  const thumbRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    function onScroll() {
+    let raf = 0;
+
+    function update() {
+      raf = 0;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setPct(max <= 0 ? 0 : (window.scrollY / max) * 100);
+      const pct = max <= 0 ? 0 : (window.scrollY / max) * 100;
+      if (fillRef.current) fillRef.current.style.width = pct + "%";
+      if (thumbRef.current) thumbRef.current.style.left = pct + "%";
+      if (barRef.current) {
+        barRef.current.setAttribute("aria-valuenow", String(Math.round(pct)));
+      }
     }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+
+    function schedule() {
+      if (!raf) raf = requestAnimationFrame(update);
+    }
+
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
   }, []);
 
@@ -32,9 +50,10 @@ export function TopScrubber() {
 
   return (
     <div
+      ref={barRef}
       className="top-scrubber"
       role="progressbar"
-      aria-valuenow={Math.round(pct)}
+      aria-valuenow={0}
       aria-valuemin={0}
       aria-valuemax={100}
     >
@@ -43,8 +62,8 @@ export function TopScrubber() {
         className="ts-track"
         onClick={(e) => seekTo(e.clientX)}
       >
-        <div className="ts-fill" style={{ width: pct + "%" }} />
-        <div className="ts-thumb" style={{ left: pct + "%" }} />
+        <div ref={fillRef} className="ts-fill" />
+        <div ref={thumbRef} className="ts-thumb" />
       </div>
     </div>
   );
