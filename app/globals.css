@@ -127,6 +127,9 @@ html.has-shader body { background: transparent; }
   position: relative;
   z-index: 5;
 }
+/* Hard stop for sideways panning on mobile: body's overflow-x alone doesn't
+   reliably clip the viewport on touch browsers once content grows wider. */
+html { overflow-x: clip; }
 body {
   min-height: 100vh;
   overflow-x: hidden;
@@ -643,6 +646,11 @@ html.ss-dragging * {
     gap: 56px;
   }
 }
+/* Grid items default to min-width:auto, so a long nowrap LED line inside
+   the deck widens the 1fr column past the viewport on phones (the page
+   grows as lines type in). Let the items shrink — the LED screen already
+   clips its own text with overflow:hidden. */
+.liner-stage > * { min-width: 0; }
 
 /* Polaroid photo */
 .liner-photo { display: flex; justify-content: center; }
@@ -849,6 +857,10 @@ html.ss-dragging * {
   overflow: hidden;
   white-space: nowrap;
   width: 0;
+  /* Lines longer than the LED fade out at its right edge instead of
+     hard-clipping mid-glyph. Lines that fit are untouched. */
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 18px), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 18px), transparent);
 }
 /* .in-view is added by ScrollReveals when the section enters the viewport. */
 .liner.in-view .screen-line-text {
@@ -1293,11 +1305,28 @@ html.ss-dragging * {
   background: color-mix(in oklab, var(--accent) 6%, transparent);
 }
 .follow-list a:hover .follow-arrow { transform: translate(4px, -4px); color: var(--accent); }
+.follow-list a:hover .follow-icon { color: var(--accent); }
 .follow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
   font-family: var(--font-display);
   font-size: clamp(22px, 2.6vw, 36px);
   font-weight: 500;
   letter-spacing: -0.01em;
+}
+.follow-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--mute);
+  transition: color 0.25s;
+}
+.follow-icon svg {
+  display: block;
+  width: clamp(18px, 2vw, 22px);
+  height: clamp(18px, 2vw, 22px);
+  /* SVG can't take text-shadow — mirror the soft shadow the labels get. */
+  filter: drop-shadow(0 2px 12px color-mix(in oklab, var(--bg) 80%, transparent));
 }
 .follow-handle { color: var(--mute); }
 .follow-arrow {
@@ -1764,7 +1793,7 @@ html.ss-dragging * {
   .marquee { padding: 10px 0; }
   .marquee-item { font-size: 10.5px; gap: 18px; padding-right: 18px; }
 
-  .liner-grid { gap: 24px; }
+  .liner-stage { gap: 24px; }
   .liner-photo-frame { aspect-ratio: 4/5; max-width: 320px; margin: 0 auto; }
   .liner-copy p { font-size: 16px; line-height: 1.55; margin-bottom: 16px; }
 

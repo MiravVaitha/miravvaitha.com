@@ -8,17 +8,19 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 // dot-matrix screen types in BIO_LINES when the .liner section gains
 // .in-view (added by the ScrollReveals observer in app/layout.tsx).
 //
-// To edit the bio: change BIO_LINES below. Keep each line ≤ 36 chars so
-// they don't wrap on the LED at desktop width. ALL CAPS is intentional —
+// To edit the bio: change BIO_LINES below. Budget: ~34 chars fit at 390px
+// viewports, ~30 at 360px. Longer lines fade out at the LED's right edge
+// on phones (mask on .screen-line-text in globals.css), so overruns are
+// graceful but still lost on small screens. ALL CAPS is intentional —
 // it's a dot-matrix readout.
 
 const BIO_LINES = [
-  "ENGINEERING @ TRINITY COLLEGE DUBLIN",
-  "SWET INTERN @ CAPVENTIS · '25/'26",
-  "JUNIOR ANALYST @ TRINITY STUDENT MANAGED FUND",
+  "ENGINEERING @ TCD",
+  "INTERN @ CAPVENTIS · '25/'26",
+  "JUNIOR ANALYST @ TRINITY SMF",
   "CO-FOUNDER · KROCCUSTOMS",
   "BUILT CLARITYCAST, PHARMSTABLE & MORE",
-  "CURRENTLY BUILDING ZENEMIC - THE #1 EVENT PLANNING APP",
+  "CURRENTLY BUILDING ZENEMIC",
   "MIRAVVAITHA@GMAIL.COM · SAY HI!",
 ];
 

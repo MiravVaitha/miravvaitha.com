@@ -3,6 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { links } from "@/content/experience";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { GithubIcon, LinkedinIcon, MailIcon } from "@/components/ui/icons";
+
+// Keyed by SocialLink.label so content/experience.ts stays React-free.
+const LINK_ICONS: Record<string, typeof MailIcon> = {
+  Email: MailIcon,
+  GitHub: GithubIcon,
+  LinkedIn: LinkedinIcon,
+};
 
 function EmailItem({ label, email }: { label: string; email: string }) {
   const [copied, setCopied] = useState(false);
@@ -47,7 +55,12 @@ function EmailItem({ label, email }: { label: string; email: string }) {
         onClick={handleLinkClick}
         data-magnetic
       >
-        <span className="follow-label">{label}</span>
+        <span className="follow-label">
+          <span className="follow-icon" aria-hidden>
+            <MailIcon />
+          </span>
+          {label}
+        </span>
         <span className="follow-handle mono">{email}</span>
         <span className="follow-arrow" aria-hidden>
           ↗
@@ -109,6 +122,7 @@ export function Follow() {
           if (l.href.startsWith("mailto:")) {
             return <EmailItem key={l.label} label={l.label} email={l.handle} />;
           }
+          const Icon = LINK_ICONS[l.label];
           return (
             <li key={l.label}>
               <a
@@ -117,7 +131,14 @@ export function Follow() {
                 rel="noopener noreferrer"
                 data-magnetic
               >
-                <span className="follow-label">{l.label}</span>
+                <span className="follow-label">
+                  {Icon ? (
+                    <span className="follow-icon" aria-hidden>
+                      <Icon />
+                    </span>
+                  ) : null}
+                  {l.label}
+                </span>
                 <span aria-hidden />
                 <span className="follow-arrow" aria-hidden>
                   ↗

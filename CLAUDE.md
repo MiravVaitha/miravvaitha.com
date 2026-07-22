@@ -38,7 +38,7 @@ app/
   projects/[slug]/page.tsx         # project detail server component, generateStaticParams over content/projects.ts
 components/
   sections/  Hero · LinerNotes · Discography · TopTracks · Follow
-  ui/        BackgroundShader · CustomCursor · TopScrubber · SideScrollbar · ScrollReveals · Marquee · NowPlaying · ProjectCard · SectionHeader · Footer · icons (unused — safe to delete)
+  ui/        BackgroundShader · CustomCursor · TopScrubber · SideScrollbar · ScrollReveals · Marquee · NowPlaying · ProjectCard · SectionHeader · Footer · icons (Mail/GitHub/LinkedIn logos used by Follow)
 content/
   projects.ts                      # Project[] — duration / year / hue / role / plays / longform / screenshots
   experience.ts                    # Experience[] + SocialLink[] for Follow
@@ -120,7 +120,6 @@ Content
 
 Repo hygiene
 - Branch is still `website-refresh`; MRD says `v2`. Rename with `git branch -m website-refresh v2` if you want them to match.
-- `components/ui/icons.tsx` is unused (inline ↗/▷/◁ characters replaced the brand SVGs) — safe to delete.
 
 Deploy
 - Vercel migration not started. v1 still serves from GH Pages via `gh-pages` branch on `main`. Plan per MRD: import to Vercel → add `miravvaitha.com` → update DNS → disable GH Pages → merge `v2`/`website-refresh` into `main`.
