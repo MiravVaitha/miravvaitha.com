@@ -84,8 +84,14 @@ function Lightbox({
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    // Lock the ROOT scroller. body's overflow never reaches the viewport
+    // (html has overflow-x: clip, which blocks body→viewport propagation),
+    // so setting it on body wouldn't lock anything — and must not be set
+    // anyway: an overflow on body turns it into a nested scroll container
+    // (see the body comment in globals.css).
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
 
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -95,7 +101,7 @@ function Lightbox({
     window.addEventListener("keydown", onKey);
 
     return () => {
-      document.body.style.overflow = prevOverflow;
+      root.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
     };
   }, [index, onClose, onChange]);

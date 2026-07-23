@@ -1,37 +1,47 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef } from "react";
 import { experience, type Experience } from "@/content/experience";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export function Discography() {
   const listRef = useRef<HTMLDivElement | null>(null);
-  const [progress, setProgress] = useState(0);
+  const fillRef = useRef<HTMLDivElement | null>(null);
 
+  // Rail progress is rAF-throttled and written straight to the fill's
+  // transform (compositor-only), so scrolling never triggers a React
+  // re-render — the previous setState-per-scroll re-rendered this whole
+  // section on every scroll event and was a measurable jank source.
   useEffect(() => {
-    function onScroll() {
+    let raf = 0;
+
+    function update() {
+      raf = 0;
       const el = listRef.current;
-      if (!el) return;
+      const fill = fillRef.current;
+      if (!el || !fill) return;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
       const total = rect.height + vh * 0.5;
       const seen = vh - rect.top;
       const p = Math.max(0, Math.min(1, seen / total));
-      setProgress(p);
+      fill.style.transform = `scaleY(${p})`;
     }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+
+    function schedule() {
+      if (!raf) raf = requestAnimationFrame(update);
+    }
+
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
   }, []);
-
-  const railStyle = {
-    "--rail-progress": progress,
-  } as CSSProperties;
 
   return (
     <section className="section disco" data-screen-label="03 Discography">
@@ -40,9 +50,9 @@ export function Discography() {
         title="Discography"
         sub="Roles & Experience to date"
       />
-      <div className="disco-timeline" ref={listRef} style={railStyle}>
+      <div className="disco-timeline" ref={listRef}>
         <div className="disco-rail" aria-hidden>
-          <div className="disco-rail-fill" />
+          <div className="disco-rail-fill" ref={fillRef} />
         </div>
         <ol className="disco-list">
           {experience.map((e, i) => (

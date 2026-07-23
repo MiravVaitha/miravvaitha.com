@@ -5,7 +5,8 @@ import { useEffect, useRef } from "react";
 // Top-of-page progress bar showing scroll position as track-progress, clickable
 // to seek. Scroll updates are rAF-throttled and write styles directly on refs,
 // so scrolling never triggers a React re-render (setState per scroll event was
-// a measurable jank source).
+// a measurable jank source). Position is written as transform/translate —
+// compositor-only — because width/left writes re-layout on every scroll frame.
 export function TopScrubber() {
   const barRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -14,15 +15,26 @@ export function TopScrubber() {
 
   useEffect(() => {
     let raf = 0;
+    let lastAria = -1;
 
     function update() {
       raf = 0;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = max <= 0 ? 0 : (window.scrollY / max) * 100;
-      if (fillRef.current) fillRef.current.style.width = pct + "%";
-      if (thumbRef.current) thumbRef.current.style.left = pct + "%";
-      if (barRef.current) {
-        barRef.current.setAttribute("aria-valuenow", String(Math.round(pct)));
+      const p = max <= 0 ? 0 : Math.min(1, window.scrollY / max);
+      if (fillRef.current) {
+        fillRef.current.style.transform = `scaleX(${p})`;
+      }
+      if (thumbRef.current && trackRef.current) {
+        // translate (not transform) so the :hover scale in CSS still applies.
+        thumbRef.current.style.setProperty(
+          "translate",
+          p * trackRef.current.clientWidth + "px 0",
+        );
+      }
+      const rounded = Math.round(p * 100);
+      if (barRef.current && rounded !== lastAria) {
+        lastAria = rounded;
+        barRef.current.setAttribute("aria-valuenow", String(rounded));
       }
     }
 

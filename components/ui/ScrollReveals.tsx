@@ -22,8 +22,10 @@ export function ScrollReveals() {
 
     targets.forEach((el) => {
       const kids = el.querySelectorAll(
-        ".tracks-grid > *, .tracks-listing > *, .tracks-mosaic > *, " +
-          ".disco-list > *, .follow-list > *, .proj-credits > *, .proj-shots > *",
+        ".section-header, .liner-stage > *, " +
+          ".tracks-grid > *, .tracks-listing > *, .tracks-mosaic > *, " +
+          ".disco-list > *, .follow-list > *, " +
+          ".proj-h2, .proj-prose > p, .proj-credits > *, .proj-shots > *",
       );
       kids.forEach((k, i) => {
         k.classList.add("reveal-child");
@@ -34,6 +36,12 @@ export function ScrollReveals() {
       });
     });
 
+    // Positive bottom rootMargin + threshold 0: reveals start just BEFORE an
+    // element scrolls into view, so (a) sections are never sitting invisible
+    // when the user reaches them and (b) the style/raster burst of starting
+    // the transition happens ahead of visibility instead of mid-viewport,
+    // which read as a scroll hitch (worst on project pages, where users
+    // could stop scrolling thinking there was nothing below).
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -43,11 +51,17 @@ export function ScrollReveals() {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0, rootMargin: "0px 0px 12% 0px" },
     );
 
     targets.forEach((t) => {
-      t.classList.add("reveal");
+      // Sections and heroes are "stages": they never animate themselves —
+      // transitioning a viewport-sized wrapper rasterizes it as one huge
+      // compositor layer mid-scroll (a visible hitch) and its movement feeds
+      // scroll anchoring. Stages only trigger .in-view for their small,
+      // individually-staggered children. Thin bands still animate whole.
+      const heavy = t.matches(".section, .proj-section, .hero, .proj-hero");
+      t.classList.add(heavy ? "reveal-stage" : "reveal");
       io.observe(t);
     });
 

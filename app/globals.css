@@ -44,8 +44,15 @@ body {
 }
 
 /* ── Background shader ────────────────────────────────────────────────── */
+/* Height is 100lvh (large viewport), NOT inset: 0 / 100vh: on mobile the
+   URL bar collapsing at scroll start resizes a bottom-anchored fixed element,
+   which forces the WebGL canvas to reallocate its drawing buffer mid-scroll —
+   a main-thread stall felt as scroll hitching. lvh is stable, so the canvas
+   never resizes while scrolling. */
 .bg-shader {
-  position: fixed; inset: 0;
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 100vh;  /* fallback for browsers without lvh */
+  height: 100lvh;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
@@ -53,7 +60,9 @@ body {
 .bg-shader > * { width: 100%; height: 100%; display: block; }
 
 .bg-shader-overlay {
-  position: fixed; inset: 0;
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 100vh;
+  height: 100lvh;
   z-index: 1;
   pointer-events: none;
   background: color-mix(in oklab, var(--bg) 18%, transparent);
@@ -127,12 +136,26 @@ html.has-shader body { background: transparent; }
   position: relative;
   z-index: 5;
 }
-/* Hard stop for sideways panning on mobile: body's overflow-x alone doesn't
-   reliably clip the viewport on touch browsers once content grows wider. */
+/* Hard stop for sideways panning on mobile — clip, never hidden, so the root
+   cannot become a programmatic scroll container. */
 html { overflow-x: clip; }
+/* Scroll anchoring OFF. Chromium compensates the scroll position whenever
+   in-viewport content moves (reveal translates, hover effects, transitions),
+   which reads as scrolling literally sticking for a beat and then releasing —
+   the classic animate-on-scroll stop-start. Nothing here needs anchoring:
+   every image container reserves its box via aspect-ratio. */
+html { overflow-anchor: none; }
 body {
   min-height: 100vh;
-  overflow-x: hidden;
+  /* CRITICAL: no overflow property on body — ever. Because html's overflow-x
+     is non-visible, body's overflow does NOT propagate to the viewport, and
+     an overflow-x here forces body's overflow-y to compute to auto: body
+     becomes a nested scroll container layered over the real page scroller.
+     The unrevealed footer's translateY(28px) then gives body ~28px of
+     internal scrollable overflow, and every wheel/touch gesture latches onto
+     that first — scroll moves a few px, sticks at the edge, needs a harder
+     push to chain to the page, and re-arms on every direction change (the
+     "bubble"). Sideways clipping is html's overflow-x: clip above. */
   font-size: 16px;
   line-height: 1.55;
 }
@@ -157,6 +180,13 @@ body { scrollbar-width: none; }
 body::-webkit-scrollbar { display: none; }
 
 /* ── Scroll reveal ─────────────────────────────────────────────────────── */
+/* Two tiers, assigned by ScrollReveals.tsx:
+   - .reveal        — small bands (marquee, footer, pager) animate themselves.
+   - .reveal-stage  — sections and heroes. NO self-animation: transitioning a
+     viewport-sized wrapper promotes a huge compositor layer whose raster cost
+     lands mid-scroll as a visible hitch, and its translateY movement feeds
+     scroll anchoring. Stages are only the .in-view trigger for their small,
+     staggered .reveal-child items. */
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -169,7 +199,6 @@ body::-webkit-scrollbar { display: none; }
   opacity: 1;
   transform: translateY(0);
 }
-.hero.reveal { opacity: 1; transform: none; transition: none; }
 
 .reveal-child {
   opacity: 0;
@@ -190,55 +219,8 @@ body::-webkit-scrollbar { display: none; }
   }
 }
 
-/* ── Side scrollbar ────────────────────────────────────────────────────── */
-.side-scroll {
-  position: fixed; top: 16px; bottom: 16px; right: 8px;
-  z-index: 60;
-  width: 10px;
-  pointer-events: none;
-}
-.ss-track {
-  position: relative;
-  width: 100%; height: 100%;
-  pointer-events: auto;
-  display: flex; justify-content: center;
-  -webkit-user-select: none;
-  user-select: none;
-  touch-action: none;
-}
-html.ss-dragging,
-html.ss-dragging * {
-  -webkit-user-select: none !important;
-  user-select: none !important;
-}
-.ss-track::before {
-  content: "";
-  position: absolute; top: 0; bottom: 0;
-  left: 50%; transform: translateX(-50%);
-  width: 2px;
-  background: color-mix(in oklab, var(--fg) 14%, transparent);
-  border-radius: 2px;
-}
-.ss-thumb {
-  position: absolute; top: 0;
-  left: 50%; margin-left: -2px;
-  width: 4px;
-  background: var(--accent);
-  border-radius: 4px;
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent);
-  transition: width 0.18s, margin-left 0.18s;
-  will-change: transform;
-}
-.ss-track:hover .ss-thumb,
-.ss-active .ss-thumb {
-  width: 6px;
-  margin-left: -3px;
-}
-@media (pointer: coarse) {
-  .side-scroll { display: none; }
-  html, body { scrollbar-width: auto; -ms-overflow-style: auto; }
-  html::-webkit-scrollbar, body::-webkit-scrollbar { display: initial; }
-}
+/* Side scrollbar removed — the top scrubber is the sole progress affordance.
+   Native scrollbars stay hidden on all devices (rules above). */
 
 /* ── Custom cursor ─────────────────────────────────────────────────────── */
 .cursor-dot, .cursor-ring {
@@ -299,13 +281,18 @@ html.ss-dragging * {
   height: 2px; background: color-mix(in oklab, var(--fg) 12%, transparent);
   border-radius: 1px;
 }
+/* Fill/thumb are driven per-frame from TopScrubber.tsx via transform/translate
+   (compositor-only) — never width/left, which re-layout on every scroll frame. */
 .ts-fill {
   position: absolute; left: 0; height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
   background: var(--accent);
   border-radius: 1px;
 }
 .ts-thumb {
-  position: absolute;
+  position: absolute; left: 0;
   width: 10px; height: 10px; margin-left: -5px;
   border-radius: 50%;
   background: var(--accent);
@@ -763,21 +750,33 @@ html.ss-dragging * {
 .vu-row { display: flex; align-items: center; gap: 12px; }
 .vu-label { font-size: 9.5px; color: rgba(255, 255, 255, 0.4); width: 10px; }
 .vu-bar { display: flex; gap: 2px; flex: 1; align-items: center; }
+/* The lit state lives on a pseudo-element whose opacity animates — opacity is
+   composited, so 44 forever-looping segments cost no main-thread paint. The
+   previous background/box-shadow keyframes repainted the deck continuously. */
 .vu-seg {
+  position: relative;
   flex: 1;
   height: 9px;
   background: rgba(255, 255, 255, 0.06);
   border-radius: 1px;
   --on-color: var(--accent);
+}
+.vu-seg::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 1px;
+  background: var(--on-color);
+  box-shadow: 0 0 4px var(--on-color);
+  opacity: 0;
   animation: vu-bounce 1.4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 55ms);
 }
 .vu-seg-amber { --on-color: oklch(0.80 0.16 70); }
 .vu-seg-red   { --on-color: oklch(0.70 0.20 25); }
 @keyframes vu-bounce {
-  0%, 100% { background: rgba(255, 255, 255, 0.06); box-shadow: none; }
-  15%      { background: var(--on-color); box-shadow: 0 0 4px var(--on-color); }
-  50%      { background: rgba(255, 255, 255, 0.06); box-shadow: none; }
+  0%, 100% { opacity: 0; }
+  15%      { opacity: 1; }
+  50%      { opacity: 0; }
 }
 
 /* LED dot-matrix screen */
@@ -970,10 +969,15 @@ html.ss-dragging * {
   border-radius: 2px;
   z-index: 0;
 }
+/* scaleY (not height) — driven per-frame from Discography.tsx while scrolling,
+   so it must stay compositor-only. A height transition here re-layouts the
+   timeline on every scroll frame. */
 .disco-rail-fill {
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: calc(var(--rail-progress, 0) * 100%);
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: top;
   background: linear-gradient(
     to bottom,
     var(--accent),
@@ -981,7 +985,7 @@ html.ss-dragging * {
   );
   border-radius: 2px;
   box-shadow: 0 0 12px color-mix(in oklab, var(--accent) 60%, transparent);
-  transition: height 0.15s linear;
+  transition: transform 0.15s linear;
 }
 
 .disco-list {
@@ -1033,10 +1037,15 @@ html.ss-dragging * {
   100% { transform: scale(2.2); opacity: 0; }
 }
 
+/* Constant padding + compensating negative margins: hover only tints the
+   background. The old hover animated padding, reflowing the card's text as
+   rows passed under the cursor mid-scroll — a layout shift that scroll
+   anchoring answered by freezing the scroll. */
 .disco-card {
-  padding: 14px 0 6px;
+  padding: 14px 16px 6px;
+  margin: 0 -16px;
   border-radius: 12px;
-  transition: padding 0.2s, background 0.2s;
+  transition: background 0.2s;
   display: flex;
   align-items: flex-start;
   gap: 24px;
@@ -1046,8 +1055,6 @@ html.ss-dragging * {
   min-width: 0;
 }
 .disco-card:hover {
-  padding-left: 16px;
-  padding-right: 16px;
   background: color-mix(in oklab, var(--accent) 5%, transparent);
 }
 
@@ -1296,12 +1303,14 @@ html.ss-dragging * {
   gap: 20px;
   align-items: center;
   padding: 22px 8px;
-  transition: padding 0.25s, background 0.25s;
+  transition: background 0.25s;
 }
+/* The label translates (compositor) instead of the row animating padding-left
+   (layout) — padding reflowed the row under the cursor mid-scroll. */
 .follow-list a:hover {
-  padding-left: 16px;
   background: color-mix(in oklab, var(--accent) 6%, transparent);
 }
+.follow-list a:hover .follow-label { transform: translateX(16px); }
 .follow-list a:hover .follow-arrow { transform: translate(4px, -4px); color: var(--accent); }
 .follow-list a:hover .follow-icon { color: var(--accent); }
 .follow-label {
@@ -1312,6 +1321,7 @@ html.ss-dragging * {
   font-size: clamp(22px, 2.6vw, 36px);
   font-weight: 500;
   letter-spacing: -0.01em;
+  transition: transform 0.25s;
 }
 .follow-icon {
   display: inline-flex;
@@ -1798,8 +1808,8 @@ html.ss-dragging * {
   .disco-rail { left: 8px; }
   .disco-marker { width: 18px; height: 18px; margin-top: 2px; }
   .disco-dot { width: 12px; height: 12px; }
-  .disco-card { padding: 6px 0; gap: 14px; }
-  .disco-card:hover { padding-left: 0; padding-right: 0; background: transparent; }
+  .disco-card { padding: 6px 0; margin: 0; gap: 14px; }
+  .disco-card:hover { background: transparent; }
   .disco-logo { width: 46px; height: 46px; border-radius: 10px; }
   .disco-logo-img { width: 30px; height: 30px; }
   .disco-role { font-size: 18px; }
@@ -1857,13 +1867,13 @@ html.ss-dragging * {
 @media (pointer: coarse) {
   .track-card:hover { transform: none; }
   .track-card:active { transform: scale(0.985); }
-  .follow-list a:hover, .tl-row:hover {
-    padding-left: 8px; background: transparent;
-  }
+  .follow-list a:hover { background: transparent; }
+  .follow-list a:hover .follow-label { transform: none; }
   .follow-list a:active {
     background: color-mix(in oklab, var(--accent) 10%, transparent);
   }
-  .disco-card:hover { padding-left: 0; padding-right: 0; background: transparent; }
+  .disco-card { margin: 0; padding-left: 0; padding-right: 0; }
+  .disco-card:hover { background: transparent; }
   .disco-card:active { background: color-mix(in oklab, var(--accent) 8%, transparent); }
   .liner-copy a { padding: 2px 0; }
   .proj-prose p, .liner-copy p { font-weight: 400; }

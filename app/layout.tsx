@@ -5,7 +5,6 @@ import "./globals.css";
 import { BackgroundShader } from "@/components/ui/BackgroundShader";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { TopScrubber } from "@/components/ui/TopScrubber";
-import { SideScrollbar } from "@/components/ui/SideScrollbar";
 import { ScrollReveals } from "@/components/ui/ScrollReveals";
 
 // Existing Geist locals stay (referenced as --font-geist-* in globals.css).
@@ -56,7 +55,6 @@ export default function RootLayout({
         <BackgroundShader />
         <CustomCursor />
         <TopScrubber />
-        <SideScrollbar />
         <ScrollReveals />
         {children}
       </body>
