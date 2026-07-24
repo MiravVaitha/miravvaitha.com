@@ -66,8 +66,12 @@ export function Discography() {
 
 function DiscoEntry({ entry, index }: { entry: Experience; index: number }) {
   const isCurrent = entry.end === "present";
+  // The Liner Notes tape deck deep-links to specific roles: the "present"
+  // entry answers to #now-playing, and any entry can set an explicit anchorId
+  // (e.g. Trinity SMF → #trinity-smf) as its own scroll target.
+  const anchorId = entry.anchorId ?? (isCurrent ? "now-playing" : undefined);
   return (
-    <li className="disco-item">
+    <li className="disco-item" id={anchorId}>
       <div className="disco-marker" aria-hidden>
         <span className="disco-dot" />
         {isCurrent && <span className="disco-pulse" />}

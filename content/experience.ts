@@ -10,6 +10,8 @@ export type Experience = {
   summary?: string;
   /** Org logo, shown as an album-cover tile on the right of the entry. */
   logo?: string;
+  /** Stable anchor id for deep-links, e.g. the Liner Notes tape deck. */
+  anchorId?: string | null;
 };
 
 // Order:
@@ -39,6 +41,7 @@ export const experience: Experience[] = [
     note: null,
     duration: "4:00",
     logo: "/experience/trinity-smf.png",
+    anchorId: "trinity-smf",
     summary:
       "Analysed hardware-sector companies for Europe's largest student-managed fund.",
   },
