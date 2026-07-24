@@ -15,8 +15,8 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 // it's a dot-matrix readout.
 
 const BIO_LINES = [
-  "ENGINEERING @ TCD",
-  "INTERN @ CAPVENTIS · '25/'26",
+  "ENGINEERING @ TRINITY COLLEGE DUBLIN",
+  "SOFTWARE TEST ENGINEER @ CAPVENTIS",
   "JUNIOR ANALYST @ TRINITY SMF",
   "CO-FOUNDER · KROCCUSTOMS",
   "BUILT CLARITYCAST, PHARMSTABLE & MORE",
