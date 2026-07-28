@@ -45,7 +45,7 @@ export const experience: Experience[] = [
   },
   {
     org: "Trinity Student Managed Fund",
-    role: "Analyst",
+    role: "Junior Analyst",
     // TBD — set to "Part-time" etc. if you want a chip here; the chip is
     // simply omitted while this is null.
     employment: null,
