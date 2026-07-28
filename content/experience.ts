@@ -1,6 +1,16 @@
+/** LinkedIn-style employment type. Rendered as a chip beside the org name. */
+export type EmploymentType =
+  | "Internship"
+  | "Full-time"
+  | "Part-time"
+  | "Contract"
+  | "Seasonal";
+
 export type Experience = {
   org: string;
   role: string;
+  /** Omit when the role has no meaningful employment type to declare. */
+  employment?: EmploymentType | null;
   start: string;
   end: string | null;
   url?: string | null;
@@ -22,7 +32,8 @@ export type Experience = {
 export const experience: Experience[] = [
   {
     org: "Capventis",
-    role: "Software Test Engineer Intern",
+    role: "Software Test Engineer",
+    employment: "Internship",
     start: "Jun 2026",
     end: "present",
     url: "https://www.capventis.com/",
@@ -35,6 +46,9 @@ export const experience: Experience[] = [
   {
     org: "Trinity Student Managed Fund",
     role: "Analyst",
+    // TBD — set to "Part-time" etc. if you want a chip here; the chip is
+    // simply omitted while this is null.
+    employment: null,
     start: "Jan 2026",
     end: "May 2026",
     url: "https://trinitysmf.com/",
@@ -47,7 +61,8 @@ export const experience: Experience[] = [
   },
   {
     org: "Capventis",
-    role: "Software Test Engineer Intern",
+    role: "Software Test Engineer",
+    employment: "Internship",
     start: "Jul 2025",
     end: "Sep 2025",
     url: "https://www.capventis.com/",
@@ -60,6 +75,8 @@ export const experience: Experience[] = [
   {
     org: "PureJewels",
     role: "Retail Assistant",
+    // TBD — see note on Trinity SMF above.
+    employment: null,
     start: "Jun 2023",
     end: "Aug 2023",
     url: "https://www.purejewels.com/",

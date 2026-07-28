@@ -103,6 +103,13 @@ function DiscoEntry({ entry, index }: { entry: Experience; index: number }) {
               <span className="disco-org-link">{entry.org}</span>
             )}
           </h3>
+          {/* Employment type gets its own row under the role line; the row is
+              omitted entirely when there's no type, so no stray margin. */}
+          {entry.employment && (
+            <div className="disco-emp-line">
+              <span className="disco-emp mono">{entry.employment}</span>
+            </div>
+          )}
           <div className="disco-meta-line">
             <span className="mono">
               {entry.start} → {entry.end ?? "—"}

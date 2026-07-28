@@ -1199,7 +1199,7 @@ a.screen-line:focus-visible .screen-line-arrow {
   font-size: clamp(20px, 2.2vw, 28px);
   line-height: 1.2;
   letter-spacing: -0.015em;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   text-wrap: pretty;
 }
 .disco-at {
@@ -1214,6 +1214,30 @@ a.screen-line:focus-visible .screen-line-arrow {
 .disco-org-link:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* Employment type: its own row between the role line and the dates.
+   Deliberately neutral — the accent-filled "Currently playing" pill above it
+   is the loud one, and two competing pills on one card flatten the hierarchy. */
+.disco-emp-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 9px;
+}
+.disco-emp {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--fg) 16%, transparent);
+  background: color-mix(in oklab, var(--fg) 4%, transparent);
+  color: color-mix(in oklab, var(--fg) 70%, transparent);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  line-height: 1.75;
+  white-space: nowrap;
 }
 
 .disco-meta-line {
@@ -1898,6 +1922,8 @@ a.screen-line:focus-visible .screen-line-arrow {
   .disco-logo { width: 46px; height: 46px; border-radius: 10px; }
   .disco-logo-img { width: 30px; height: 30px; }
   .disco-role { font-size: 18px; }
+  .disco-emp-line { margin-bottom: 7px; }
+  .disco-emp { font-size: 9px; padding: 1px 7px; letter-spacing: 0.12em; }
   .disco-summary { font-size: 14.5px; line-height: 1.5; }
   .disco-meta-line { font-size: 11.5px; }
   .disco-track-meta { gap: 8px; margin-bottom: 4px; }
