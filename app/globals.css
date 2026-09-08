@@ -1255,9 +1255,32 @@ a.screen-line:focus-visible .screen-line-arrow {
   font-size: clamp(15px, 1.2vw, 17px);
   line-height: 1.55;
   margin: 0;
+  padding: 0;
   max-width: 64ch;
   opacity: 0.92;
   text-wrap: pretty;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.disco-summary li {
+  position: relative;
+  padding-left: 18px;
+}
+/* Bullet is a drawn dot rather than a ::marker so it can be optically centred
+   on the first line — the display serif's x-height sits low in the line box. */
+.disco-summary li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  /* 0.86em ≈ the x-height band centre of Instrument Serif at this line-height,
+     so the dot reads as centred on the lowercase text rather than riding high. */
+  top: 0.86em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--accent) 70%, transparent);
+  transform: translateY(-50%);
 }
 
 /* ── Top Tracks: Grid ──────────────────────────────────────────────────── */
@@ -1924,7 +1947,8 @@ a.screen-line:focus-visible .screen-line-arrow {
   .disco-role { font-size: 18px; }
   .disco-emp-line { margin-bottom: 7px; }
   .disco-emp { font-size: 9px; padding: 1px 7px; letter-spacing: 0.12em; }
-  .disco-summary { font-size: 14.5px; line-height: 1.5; }
+  .disco-summary { font-size: 14.5px; line-height: 1.5; gap: 5px; }
+  .disco-summary li { padding-left: 16px; }
   .disco-meta-line { font-size: 11.5px; }
   .disco-track-meta { gap: 8px; margin-bottom: 4px; }
   .disco-num { font-size: 10px; }

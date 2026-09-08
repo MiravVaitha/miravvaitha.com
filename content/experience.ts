@@ -17,7 +17,8 @@ export type Experience = {
   note?: string | null;
   /** Mock track length, e.g. "3:00" */
   duration?: string;
-  summary?: string;
+  /** Rendered as a bullet list under the meta line — one entry per bullet. */
+  summary?: string[];
   /** Org logo, shown as an album-cover tile on the right of the entry. */
   logo?: string;
   /** Stable anchor id for deep-links, e.g. the Liner Notes tape deck. */
@@ -35,13 +36,16 @@ export const experience: Experience[] = [
     role: "Software Test Engineer",
     employment: "Internship",
     start: "Jun 2026",
-    end: "present",
+    end: "Sep 2026",  
     url: "https://www.capventis.com/",
     note: "Return placement",
     duration: "—:—",
     logo: "/experience/capventis.png",
-    summary:
-      "Building on the previous summer's work, currently focused on API testing in TypeScript and SQL.",
+    summary: [
+      "Developed automated API tests in TypeScript and SQL for GluQL using Playwright, covering query functionality and edge cases that run in the CI pipeline.",
+      "Built test coverage from scratch for a new entity fetcher API, helping define what needed to be tested and working alongside the engineers developing it.",
+      "Expanded and maintained the platform's end-to-end UI test suite as new features were released, adding regression tests and validating bug fixes.",
+    ],
   },
   {
     org: "Trinity Student Managed Fund",
@@ -56,8 +60,9 @@ export const experience: Experience[] = [
     duration: "4:00",
     logo: "/experience/trinity-smf.png",
     anchorId: "trinity-smf",
-    summary:
+    summary: [
       "Analysed hardware-sector companies for Europe's largest student-managed fund.",
+    ],
   },
   {
     org: "Capventis",
@@ -69,8 +74,12 @@ export const experience: Experience[] = [
     note: null,
     duration: "3:00",
     logo: "/experience/capventis.png",
-    summary:
-      "Wrote end-to-end test suites for Glu, a business data integration platform using Playwright in JavaScript, working within the existing codebase and shipping changes via GitHub. Built reusable functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team. Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers. Analysed large client datasets to support reporting and client-facing deliverables.",
+    summary: [
+      "Wrote end-to-end test suites for Glu, a business data integration platform using Playwright in JavaScript, working within the existing codebase and shipping changes via GitHub.",
+      "Built reusable functions and test utilities to reduce boilerplate and speed up test authoring across the engineering team.",
+      "Participated in weekly engineering standups, contributing to planning and code review alongside full-time engineers.",
+      "Analysed large client datasets to support reporting and client-facing deliverables.",
+    ],
   },
   {
     org: "PureJewels",
@@ -83,8 +92,9 @@ export const experience: Experience[] = [
     note: null,
     duration: "3:00",
     logo: "/experience/purejewels.png",
-    summary:
+    summary: [
       "High-value retail role: customer service, inventory and stock control, visual merchandising.",
+    ],
   },
 ];
 

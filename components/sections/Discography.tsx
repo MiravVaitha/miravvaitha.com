@@ -116,7 +116,13 @@ function DiscoEntry({ entry, index }: { entry: Experience; index: number }) {
             </span>
             {entry.note && <span className="disco-note">· {entry.note}</span>}
           </div>
-          {entry.summary && <p className="disco-summary">{entry.summary}</p>}
+          {entry.summary && entry.summary.length > 0 && (
+            <ul className="disco-summary">
+              {entry.summary.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+          )}
         </div>
         {entry.logo && (
           <div className="disco-logo" aria-hidden>
