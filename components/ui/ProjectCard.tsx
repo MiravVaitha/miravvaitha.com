@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { memo, type CSSProperties } from "react";
 import type { Project } from "@/content/projects";
+import { isUnoptimizedImage } from "@/lib/utils";
 
 type Props = {
   project: Project;
@@ -17,10 +18,12 @@ export const ProjectCard = memo(function ProjectCard({
   active = false,
 }: Props) {
   const isPlaceholder = project.status === "placeholder";
+  const isShelved = project.status === "shelved";
   const coverStyle = { "--h": project.hue } as CSSProperties;
   const className = [
     "track-card",
     isPlaceholder ? "is-placeholder" : null,
+    isShelved ? "is-shelved" : null,
     active ? "is-active" : null,
   ]
     .filter(Boolean)
@@ -41,7 +44,7 @@ export const ProjectCard = memo(function ProjectCard({
               alt={`${project.title} cover`}
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              unoptimized={project.cover.endsWith(".svg")}
+              unoptimized={isUnoptimizedImage(project.cover)}
               className="track-cover-img"
             />
             <div className="track-cover-shade" aria-hidden />
@@ -70,6 +73,15 @@ export const ProjectCard = memo(function ProjectCard({
         )}
         {project.status === "placeholder" && (
           <span className="cover-badge">TBD</span>
+        )}
+        {/* Shelved reads as a third state, not a dimmer "in progress": its own
+            badge treatment plus the pause glyph, matching the site's transport
+            vocabulary (playing / played / paused). */}
+        {isShelved && (
+          <span className="cover-badge is-shelved">
+            <span className="cover-badge-glyph" aria-hidden />
+            SHELVED
+          </span>
         )}
       </div>
       <div className="track-meta">

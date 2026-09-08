@@ -1364,6 +1364,45 @@ a.screen-line:focus-visible .screen-line-arrow {
 .track-card:hover .cover-hover { opacity: 1; }
 .track-card.is-placeholder .cover-title { color: rgba(255,255,255,0.55); font-style: italic; }
 
+/* ── Shelved: the third project state ───────────────────────────────────────
+   Neither running nor finished. The cover desaturates so a parked project is
+   obvious at grid scale without reading as broken, then wakes back to full
+   colour on hover so the card never feels disabled. Everything layered over
+   the cover (badge, title, track number) is already achromatic, so the filter
+   only touches the artwork. */
+.track-card.is-shelved .track-cover {
+  filter: saturate(0.2);
+  transition: filter 0.35s;
+}
+.track-card.is-shelved:hover .track-cover { filter: saturate(1); }
+.track-card.is-shelved .cover-title { color: rgba(255,255,255,0.85); }
+
+/* Outlined rather than solid, so it doesn't scan as a colour variant of
+   DONE / IN PROGRESS — it's a different kind of thing, not a different value. */
+.cover-badge.is-shelved {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.38);
+  border: 1px solid rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(2px);
+}
+/* Pause bars drawn in CSS rather than a glyph — no font can fail to have it. */
+.cover-badge-glyph {
+  display: inline-block;
+  width: 6px;
+  height: 7px;
+  border-left: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+/* Project page hero: hollow dot instead of the filled accent one. */
+.proj-eyebrow.is-shelved .dot {
+  background: transparent;
+  border: 1.5px solid color-mix(in oklab, var(--fg) 45%, transparent);
+}
+
 /* Real cover images: sit above the radial gradient, below the grain + text
    overlays. The shade keeps the white title legible regardless of the
    photo's content. */
@@ -1728,6 +1767,25 @@ a.screen-line:focus-visible .screen-line-arrow {
       oklch(0.72 0.18 var(--h)) 0%,
       oklch(0.32 0.10 var(--h)) 100%);
 }
+
+/* ── Portrait (phone) screenshots ───────────────────────────────────────────
+   The default landscape tile crops to fill, which would leave a horizontal
+   sliver of a phone screen. Portrait shots get a near-phone tile so almost
+   nothing is letterboxed, and are fitted rather than cropped so no UI is lost.
+   An all-portrait set lays out as an even row instead of the hero split. */
+@media (min-width: 720px) {
+  .proj-shots.is-portrait { grid-template-columns: repeat(3, 1fr); }
+}
+.proj-shot.is-portrait {
+  aspect-ratio: 9 / 20;
+  max-width: 300px;
+  margin-inline: auto;
+  /* A fitted screenshot sits on a quiet mount, not on album art: the tile's
+     hue gradient would otherwise show as a colour bar above and below it. */
+  background: color-mix(in oklab, var(--fg) 5%, var(--bg));
+  border: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+}
+.proj-shot.is-portrait .proj-shot-img { object-fit: contain; }
 
 /* Button that wraps each project image so it opens a fullscreen lightbox. */
 .proj-shot-button {

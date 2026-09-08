@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import type { ProjectScreenshot } from "@/content/projects";
+import { isUnoptimizedImage } from "@/lib/utils";
 
 type Props = {
   shots: ProjectScreenshot[];
@@ -26,7 +27,9 @@ export function ProjectImages({ shots, coverStyle, coverAltStyle }: Props) {
   return (
     <>
       {shots.map((shot, i) => {
-        const wide = shot.wide || i === 0;
+        // Portrait shots never take the wide hero slot: spanning two columns
+        // with a phone-shaped image just stretches the letterboxing.
+        const wide = !shot.portrait && (shot.wide || i === 0);
         const tileStyle = i % 2 === 0 ? coverStyle : coverAltStyle;
         const className =
           "proj-shot-button" + (wide ? " proj-shot-wide" : "");
@@ -38,7 +41,10 @@ export function ProjectImages({ shots, coverStyle, coverAltStyle }: Props) {
             onClick={() => setActiveIdx(i)}
             aria-label={`View image: ${shot.caption}`}
           >
-            <figure className="proj-shot" style={tileStyle}>
+            <figure
+              className={"proj-shot" + (shot.portrait ? " is-portrait" : "")}
+              style={tileStyle}
+            >
               <Image
                 src={shot.src}
                 alt={shot.caption}
@@ -48,7 +54,7 @@ export function ProjectImages({ shots, coverStyle, coverAltStyle }: Props) {
                     ? "(min-width: 720px) 66vw, 100vw"
                     : "(min-width: 720px) 33vw, 100vw"
                 }
-                unoptimized={shot.src.endsWith(".svg")}
+                unoptimized={isUnoptimizedImage(shot.src)}
                 className="proj-shot-img"
               />
               <figcaption className="mono">{shot.caption}</figcaption>

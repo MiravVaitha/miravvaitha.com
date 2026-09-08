@@ -5,6 +5,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { projects, type Project } from "@/content/projects";
 import { Footer } from "@/components/ui/Footer";
 import { ProjectImages } from "@/components/ui/ProjectImages";
+import { isUnoptimizedImage } from "@/lib/utils";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -94,7 +95,7 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
               fill
               sizes="(min-width: 900px) 360px, 80vw"
               priority
-              unoptimized={project.cover.endsWith(".svg")}
+              unoptimized={isUnoptimizedImage(project.cover)}
               className="proj-hero-cover-img"
             />
             <div className="track-cover-shade" aria-hidden />
@@ -106,7 +107,15 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
         </span>
       </div>
       <div className="proj-hero-meta">
-        <div className="proj-eyebrow">
+        {/* Shelved gets a hollow dot — the filled accent dot reads as "live",
+            which is exactly what a parked project isn't. */}
+        <div
+          className={
+            project.status === "shelved"
+              ? "proj-eyebrow is-shelved"
+              : "proj-eyebrow"
+          }
+        >
           <span className="dot" />{" "}
           <span>
             {project.year} ·{" "}
@@ -217,7 +226,16 @@ function ProjectBody({ project }: { project: Project }) {
           <span className="mono proj-h2-num">A3</span>
           <span>Project images</span>
         </h2>
-        <div className="proj-shots">
+        {/* An all-portrait set drops the 2fr/1fr hero split for an even row,
+            since phone screens read as a sequence rather than one lead image. */}
+        <div
+          className={
+            project.screenshots?.length &&
+            project.screenshots.every((s) => s.portrait)
+              ? "proj-shots is-portrait"
+              : "proj-shots"
+          }
+        >
           {project.screenshots && project.screenshots.length > 0 ? (
             <ProjectImages
               shots={project.screenshots}
