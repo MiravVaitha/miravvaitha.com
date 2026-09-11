@@ -83,6 +83,36 @@ const projectsRaw: Project[] = [
   },
   // ── Done ────────────────────────────────────────────────────────────────
   {
+    slug: "cansat-ground-station",
+    title: "CanSat Ground Station",
+    tech: ["Next.js", "TypeScript", "Python", "FastAPI", "WebSockets", "MapLibre"],
+    blurb:
+      "Receive-only ground station for a rocket-borne CanSat: altitude derived from pressure, apogee detection on a lossy 1 Hz link, a recovery view, and offline replay.",
+    duration: "4:36",
+    status: "shipped",
+    year: "2026",
+    hue: 340,
+    role: "Solo · frontend + backend",
+    plays: "1.0K",
+    // DRAFT written from the repo README and NOTES.md; edit freely.
+    longform: [
+      "A CanSat is a payload about the size of a drinks can that a rocket carries up and releases, and this is the screen on the ground that receives it. Unlike the drone ground station, nothing goes the other way: there are no waypoints to send and no commands to give, because once the rocket has left the pad, listening is the whole of the relationship. What comes down is pressure, the temperature inside the can, a GPS fix, and a counter. Altitude is not in there. How high it is, how high it got, how much of the link is being lost, and which way to walk to go and find it are all worked out on the ground from what the payload does send.",
+      "Like the drone one, you can watch it without installing anything. A flight normally needs a simulated payload transmitting and a receiver running on your machine, but every flight is recorded, and a recording plays back in the browser with nothing behind it. The live demo is one of those: a real 400 m flight, with the dropped packets and the lost GPS lock it actually had, at up to twenty times speed.",
+      "The part I enjoyed most was finding apogee. The obvious test, a reading lower than the one before, fires while the rocket is still sitting on the pad, because at rest the readings wobble and one of them is always lower than the last. The data is thin too, roughly ten packets between launch and the top, so you cannot smooth the wobble away without flattening the peak you are trying to measure. What works is to smooth it to make the call, then go back and report the highest unsmoothed reading. My favourite bug was much smaller than any of that. Replaying a recording with the receiver switched off, the header read LINK OK in green, which was true of the flight being replayed and a flat lie about the room I was sitting in. Where a number sits on the screen decides what it claims. That and every other dead end is written up in the repo.",
+    ],
+    cover: "/projects/cansat-ground-station/cover.jpg",
+    screenshots: [
+      { src: "/projects/cansat-ground-station/screen-1.gif", caption: "Altitude drawing packet by packet to apogee" },
+      { src: "/projects/cansat-ground-station/screen-2.png", caption: "The payload simulator transmitting at 1 Hz" },
+      { src: "/projects/cansat-ground-station/cover.jpg", caption: "Recovery view, bearing and distance from the pad" },
+      { src: "/projects/cansat-ground-station/screen-3.gif", caption: "Replay running with the receiver switched off" },
+    ],
+    links: {
+      live: "https://rocket-ground-station.vercel.app",
+      github: "https://github.com/MiravVaitha/cansat-ground-station",
+    },
+  },
+  {
     slug: "uas-ground-station",
     title: "UAS Ground Station",
     tech: ["Next.js", "TypeScript", "Python", "FastAPI", "MAVLink", "ArduPilot SITL"],
